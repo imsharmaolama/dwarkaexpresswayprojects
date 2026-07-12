@@ -162,4 +162,32 @@
   /* ---------- close on escape ---------- */
   document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeSearch(); window.closeEnquiry&&window.closeEnquiry(); window.closeLightbox&&window.closeLightbox(); }});
   document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>{ const t=b.getAttribute('data-close'); if(t==='search')closeSearch(); if(t==='enq')window.closeEnquiry(); }));
+
+  /* ---------- GSAP scroll reveals (frontend-design / gsap-core) ---------- */
+  (function(){
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const els = document.querySelectorAll('.best_project_heading, .section-sub, .project_card, .trust-item, .footer-col, .footer-news');
+    els.forEach(el=>el.classList.add('reveal'));           // .reveal is opacity:1 by default (safe)
+    // HARD SAFETY: never leave content hidden, even if GSAP/ScrollTrigger misbehave
+    const safety = setTimeout(()=>els.forEach(el=>{el.style.opacity='';el.style.transform='';}), 1600);
+    if(reduce || !window.gsap || !window.ScrollTrigger){ clearTimeout(safety); els.forEach(el=>el.classList.add('in')); return; }
+    const gsap = window.gsap;
+    gsap.registerPlugin(window.ScrollTrigger);
+    document.documentElement.classList.add('gsap-ready');
+    try{
+      const hero = document.querySelector('.hero');
+      if(hero) gsap.from(hero.querySelectorAll('.badges, h1, p.lead, .search-wrap'),
+        {y:30, opacity:0, duration:.8, ease:'power3.out', stagger:.12});
+      gsap.utils.toArray('.section').forEach(sec=>{
+        const head = sec.querySelectorAll('.best_project_heading, .section-sub');
+        if(head.length) gsap.from(head,{y:24,opacity:0,duration:.7,ease:'power3.out',scrollTrigger:{trigger:sec,start:'top 85%',once:true}});
+        const cards = sec.querySelectorAll('.project_card');
+        if(cards.length) gsap.from(cards,{y:34,opacity:0,duration:.6,ease:'power2.out',stagger:.08,scrollTrigger:{trigger:sec,start:'top 90%',once:true}});
+      });
+      gsap.utils.toArray('.trust-item, .footer-col').forEach((el,i)=>{
+        gsap.from(el,{y:20,opacity:0,duration:.6,ease:'power2.out',delay:(i%3)*.08,scrollTrigger:{trigger:el,start:'top 92%',once:true}});
+      });
+      window.addEventListener('load', ()=>window.ScrollTrigger.refresh());
+    }catch(e){ /* safety timer reveals everything */ }
+  })();
 })();

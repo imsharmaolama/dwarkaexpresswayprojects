@@ -438,7 +438,12 @@ FOOTER = f"""<footer class="site-footer">
 def scripts(projects_js="[]"):
     # root-absolute paths so JS/CSS resolve correctly from any subpage depth
     return f"""<script>window.__PROJECTS__={projects_js};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="/js/site.js"></script>"""
 
 def phone_field(name="phone", required=True):
@@ -487,7 +492,7 @@ def card(p):
     rating = p.get("ratings")
     rating_html = f'<span class="rating-badge">&#9733; {rating}</span>' if rating else ""
     tag_html = f'<span class="project_tag">{esc(tag)}</span>' if tag else ""
-    return f"""<div class="project_card">
+    return f"""<div class="project_card reveal">
   <div class="img_card">
     <a href="projects/{esc(slug_file(p['slug']))}.html"><img class="img_cover" src="{img}" alt="{esc(p['name'])}" loading="lazy"></a>
     {tag_html}{rating_html}
@@ -505,7 +510,7 @@ def card(p):
 
 def section(title, sub, plist, viewall):
     cards = "".join(card(p) for p in plist[:8])
-    return f"""<section class="section"><div class="container">
+    return f"""<section class="section reveal"><div class="container">
   <div class="section-head"><h2 class="best_project_heading">{esc(title)}</h2>
   {f'<a class="view-all" href="{viewall}">View All &rarr;</a>' if viewall else ''}</div>
   <p class="section-sub">{esc(sub)}</p>
@@ -532,7 +537,8 @@ def build_index():
       <span><img src="assets/discount.svg" alt="offer"> Free Site-Visit</span>
       <span><img src="assets/discount.svg" alt="offer"> Special Price Offers</span>
     </div>
-    <h1>Explore Dwarka Expressway<br>Projects in Gurgaon</h1>
+    <h1>Find Your <span class="hl">Dream Home</span><br>on Dwarka Expressway</h1>
+    <p class="lead">176+ verified projects across Gurgaon's fastest-growing corridor. Compare prices, builders and configurations in one place.</p>
     <div class="search-wrap"><input class="search-box" placeholder="Search by Project Name" data-search-open></div>
   </div>
 </section>
@@ -603,7 +609,7 @@ def build_detail(p):
         if not pl.get("should_show", True): continue
         cat = (pl.get("category") or {}).get("name") if isinstance(pl.get("category"), dict) else pl.get("category")
         size = f"{pl.get('size','')} {pl.get('size_sq','')}".strip()
-        rows += f"<tr><td>{esc(cat or '—')}</td><td>{esc(size)}</td><td>{esc(pl.get('price') or 'Call for Price')}</td></tr>"
+        rows += f"<tr><td>{esc(cat or 'N/A')}</td><td>{esc(size)}</td><td>{esc(pl.get('price') or 'Call for Price')}</td></tr>"
     price_table = f'<table class="price-table"><tr><th>Configuration</th><th>Size</th><th>Price</th></tr>{rows}</table>' if rows else f'<p>Starting Price: <b>{esc(price)}</b></p>'
     # amenities
     ams = p.get("amenties") or []
@@ -640,9 +646,9 @@ def build_detail(p):
 <section class="detail-hero"><div class="container">
   <h1 class="detail-title">{esc(p['name'])}</h1>
   <div class="detail-meta">
-    <span><b>Builder:</b> {esc(bname or '—')}</span>
-    <span><b>Type:</b> {esc(p.get('project_type') or '—')}</span>
-    <span><b>Status:</b> {esc(p.get('project_status') or '—')}</span>
+    <span><b>Builder:</b> {esc(bname or 'Not specified')}</span>
+    <span><b>Type:</b> {esc(p.get('project_type') or 'Not specified')}</span>
+    <span><b>Status:</b> {esc(p.get('project_status') or 'Not specified')}</span>
     <span><b>Location:</b> {esc(loc)}</span>
   </div>
   <div class="property_price" style="font-size:20px">Starting from {esc(price)}</div>
@@ -861,7 +867,7 @@ def build_landing(slug):
         if re.search(r'sector-([\d]+[a-z]?)-', slug.lower()):
             n = re.search(r'sector-([\d]+[a-z]?)-', slug.lower()).group(1).upper()
             label = f"projects in Sector {n}"
-        desc_intro = (f"<p>Explore {esc(label)} on Dwarka Expressway, Gurgaon — "
+        desc_intro = (f"<p>Explore {esc(label)} on Dwarka Expressway, Gurgaon. "
                       f"{len(related)} RERA-approved {'project' if len(related)==1 else 'projects'} "
                       f"with prices, floor plans &amp; amenities.</p>")
     meta_desc = plain(seo.get("description") or desc_html or title)
