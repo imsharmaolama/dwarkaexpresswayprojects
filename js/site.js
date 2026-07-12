@@ -107,8 +107,38 @@
     form.addEventListener('submit',async e=>{
       e.preventDefault();
       const ok=await submitLead(form,{project:form.project&&form.project.value});
-      if(ok){ form.reset(); toast('Thank you! Our team will call you shortly.'); if(enqModal) enqModal.classList.remove('open'); }
+      if(ok){
+        form.reset();
+        showThanks();
+        if(enqModal) enqModal.classList.remove('open');
+      }
     });
+  });
+
+  /* ---------- thank-you overlay: show 5s then return to same page ---------- */
+  function ensureThanks(){
+    let t=document.getElementById('thanksOverlay');
+    if(!t){
+      t=document.createElement('div');
+      t.id='thanksOverlay';t.className='thanks-overlay';
+      t.innerHTML='<div class="thanks-card"><div class="tcheck"><i class="fas fa-check"></i></div>'
+        +'<h2>Thank You!</h2><p>Our expert will call you shortly with exclusive offers.</p>'
+        +'<p class="tcount">Redirecting back in <span id="tCount">5</span>s…</p></div>';
+      document.body.appendChild(t);
+    }
+    return t;
+  }
+  function showThanks(){
+    const t=ensureThanks();
+    t.classList.add('show');
+    let n=5; const c=t.querySelector('#tCount'); if(c)c.textContent=n;
+    clearInterval(window.__tTimer);
+    window.__tTimer=setInterval(()=>{ n--; if(c)c.textContent=n; if(n<=0){ clearInterval(window.__tTimer); t.classList.remove('show'); } },1000);
+  }
+
+  /* ---------- hide any straggler broken images (dead external icons) ---------- */
+  document.querySelectorAll('img').forEach(img=>{
+    img.addEventListener('error',()=>{ img.style.display='none'; });
   });
 
   /* ---------- newsletter ---------- */

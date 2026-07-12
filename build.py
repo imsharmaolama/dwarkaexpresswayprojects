@@ -28,6 +28,33 @@ def page_file(slug):
 def esc(s):
     return html.escape(str(s or ""), quote=True)
 
+_ICON_MAP = [
+    ("density", "fa-layer-group"), ("coverage", "fa-compress"), ("open area", "fa-tree"),
+    ("forest", "fa-tree"), ("tower", "fa-building"), ("green", "fa-leaf"),
+    ("amenit", "fa-star"), ("club", "fa-mug-hot"), ("pool", "fa-person-swimming"),
+    ("security", "fa-shield-halved"), ("gym", "fa-dumbbell"), ("park", "fa-car"),
+    ("location", "fa-location-dot"), ("connectivity", "fa-route"), ("luxury", "fa-gem"),
+    ("view", "fa-binoculars"), ("spec", "fa-ruler-combined"), ("price", "fa-tag"),
+]
+def clean_rich(html_str):
+    if not html_str:
+        return ""
+    # strip dead <img> icon tags (broken external icons / alt=undefined / empty dims)
+    html_str = re.sub(r'<img\b[^>]*\bsrc="[^"]*(icons/|emoji\.php|fbcdn)[^"]*"[^>]*/?>', '', html_str, flags=re.I)
+    html_str = re.sub(r'<img\b[^>]*\balt="undefined"[^>]*/?>', '', html_str, flags=re.I)
+    # any remaining <img> with empty style dims -> drop (likely broken)
+    html_str = re.sub(r'<img\b[^>]*style="[^"]*height:\s*;[^"]*"[^>]*/?>', '', html_str, flags=re.I)
+    # add a FA icon before each <h4> highlight title
+    def add_icon(m):
+        title = m.group(2).lower()
+        icon = "fa-circle-check"
+        for key, ic in _ICON_MAP:
+            if key in title:
+                icon = ic; break
+        return f'<div class="hl-item"><i class="fas {icon}"></i>{m.group(1)}{m.group(2)}</div>'
+    html_str = re.sub(r'(<h4>)([^<]+)(</h4>)', add_icon, html_str)
+    return html_str
+
 def img_link(im):
     if isinstance(im, dict):
         img = im.get("image") or {}
@@ -366,7 +393,7 @@ FOOTER = f"""<footer class="site-footer">
 
 def scripts(projects_js="[]"):
     return f"""<script>window.__PROJECTS__={projects_js};</script>
-<script src="https://kit.fontawesome.com/c260689fd1.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <script src="js/site.js"></script>"""
 
 def phone_field(name="phone", required=True):
@@ -536,9 +563,9 @@ def build_detail(p):
     amen = "".join(f"<span>{esc(a.get('name'))}</span>" for a in ams) or "<span>Amenities available on request</span>"
     # description / highlights / advantages
     desc = p.get("description") or p.get("short_descrip") or ""
-    highlights = p.get("highlights") or ""
-    advantages = p.get("advantages") or ""
-    features = p.get("features") or ""
+    highlights = clean_rich(p.get("highlights") or "")
+    advantages = clean_rich(p.get("advantages") or "")
+    features = clean_rich(p.get("features") or "")
     # map
     lat = (p.get("location") or {}).get("latitude")
     lng = (p.get("location") or {}).get("longitude")
