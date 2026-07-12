@@ -82,6 +82,25 @@ def first_img(p):
             return l
     return "assets/logo.png"
 
+def price_cr(p):
+    """Parse starting_price string -> float crores (or None)."""
+    s = (p.get("starting_price") or "").strip().lower().replace("*", "")
+    if not s:
+        return None
+    m = re.search(r"([\d]+(?:\.\d+)?)", s)
+    if not m:
+        return None
+    num = float(m.group(1))
+    if "lac" in s or "lakh" in s:
+        return num / 100.0
+    return num  # assume crores
+
+def text_blob(p):
+    """Combined searchable text for a project (name, tags, desc, etc.)."""
+    return " ".join(str(p.get(k) or "") for k in
+                    ("name","configuration","project_type","project_tag","tagline",
+                     "amenties","highlights","features","short_descrip","description")).lower()
+
 def loc_addr(p):
     loc = p.get("location") or {}
     addr = loc.get("address") or ""
@@ -667,14 +686,14 @@ def main():
     res = [p for p in PROJECTS if p.get("project_type")=="residential"]
     build_listing("residential-projects-gurgaon", "Residential Projects in Gurgaon", res, "Explore premium residential apartments on Dwarka Expressway, Gurgaon.")
     build_listing("commercial-projects-gurgaon", "Commercial Projects in Gurgaon", comm, "Best commercial & retail spaces on Dwarka Expressway.")
-    build_listing("affordable-housing-projects", "Affordable Housing Projects", [p for p in PROJECTS if 'affordable' in (p.get('project_tag') or '').lower() or 'Affordable' in (p.get('configuration') or '')], "Upcoming affordable housing projects on Dwarka Expressway.")
-    build_listing("sco-plots-gurgaon", "SCO Plots for Sale in Gurgaon", [p for p in PROJECTS if 'sco' in (p.get('project_type') or '').lower() or 'SCO' in (p.get('name') or '')], "Buy SCO plots on Dwarka Expressway, Gurgaon.")
+    build_listing("affordable-housing-projects", "Affordable Housing Projects", [p for p in PROJECTS if (price_cr(p) or 0) < 1], "Residential projects under ₹1 Cr on Dwarka Expressway.")
+    build_listing("sco-plots-gurgaon", "SCO Plots for Sale in Gurgaon", [p for p in PROJECTS if 'sco' in text_blob(p)], "Buy SCO plots on Dwarka Expressway, Gurgaon.")
     build_listing("upcoming-projects", "Upcoming Projects on Dwarka Expressway", under+new, "Upcoming & New Launch projects on Dwarka Expressway.")
     build_listing("ready-to-move-flats-in-dwarka-expressway-gurgaon", "Ready To Move Flats", ready, "Ready to move flats on Dwarka Expressway, Gurgaon.")
     build_listing("best-deals", "Best Projects on Dwarka Expressway", sorted(PROJECTS, key=lambda x:-(x.get('ratings') or 0))[:20], "Hand-picked best-rated projects on Dwarka Expressway.")
     build_listing("projects-list", "All Projects on Dwarka Expressway", PROJECTS, "Complete list of projects on Dwarka Expressway, Gurgaon.")
-    build_listing("luxury-projects", "Luxury Projects", [p for p in PROJECTS if 'luxury' in (p.get('tagline') or '').lower() or 'Luxury' in (p.get('project_tag') or '')], "Luxury residences on Dwarka Expressway.")
-    build_listing("buy-plots", "Buy Plots on Dwarka Expressway", [p for p in PROJECTS if 'plot' in (p.get('project_type') or '').lower() or 'Plot' in (p.get('name') or '')], "Residential & SCO plots on Dwarka Expressway, Gurgaon.")
+    build_listing("luxury-projects", "Luxury Projects", [p for p in PROJECTS if 'luxury' in (p.get('project_tag') or '').lower() or 'luxury' in (p.get('tagline') or '').lower() or (price_cr(p) or 0) >= 3], "Luxury residences on Dwarka Expressway.")
+    build_listing("buy-plots", "Buy Plots on Dwarka Expressway", [p for p in PROJECTS if ('plotted' in text_blob(p) or 'residential plot' in text_blob(p) or 'plots' in text_blob(p)) and 'floor plan' not in text_blob(p)], "Residential & SCO plots on Dwarka Expressway, Gurgaon.")
     # contact + privacy
     build_contact()
     build_privacy()
@@ -764,9 +783,9 @@ DEV_MATCH = {
 }
 
 def landing_projects(slug):
-    """Projects genuinely belonging to this developer/sector/type landing.
+    """Projects genuinely belonging to this landing page.
     Returns a list (possibly empty) for a recognised page, or None for a
-    generic page where a curated fallback is acceptable."""
+    generic/corridor page where a curated fallback is acceptable."""
     stem = re.sub(r'\.(php|html)$','',slug).strip().lower()
     # developer pages -> match builder name
     key = DEV_MATCH.get(stem)
@@ -778,12 +797,45 @@ def landing_projects(slug):
         num = m.group(1)
         pat = re.compile(r'sector[\s\-]*0*'+re.escape(num)+r'(?![\da-z])', re.I)
         return [p for p in PROJECTS if pat.search(loc_addr(p)) or pat.search(p.get("name") or "")]
-    # bhk / villa / plot type pages -> keyword match on configuration
+    # bhk pages -> keyword match on configuration
     m = re.search(r'(\d)\s*bhk', stem)
     if m:
-        n=m.group(1)
-        return [p for p in PROJECTS if f"{n} bhk" in (p.get("configuration") or "").lower()
+        n = m.group(1)
+        return [p for p in PROJECTS
+                if f"{n} bhk" in (p.get("configuration") or "").lower()
                 or f"{n}bhk" in (p.get("configuration") or "").lower()]
+    # budget pages -> parse the price and filter
+    if "1cr-1.5cr" in stem:
+        return [p for p in PROJECTS if (v:=price_cr(p)) is not None and 1 <= v < 1.5]
+    if "2cr-3cr" in stem:
+        return [p for p in PROJECTS if (v:=price_cr(p)) is not None and 2 <= v < 3]
+    if "affordable" in stem:
+        return [p for p in PROJECTS if (v:=price_cr(p)) is not None and v < 1]
+    if stem == "luxury-projects":
+        return [p for p in PROJECTS if 'luxury' in (p.get('project_tag') or '').lower()
+                or 'luxury' in (p.get('tagline') or '').lower() or (v:=price_cr(p)) and v >= 3]
+    # possession / status pages
+    if stem in ("ready-to-move-flats-in-dwarka-expressway-gurgaon", "ready-to-move-flats"):
+        return [p for p in PROJECTS if p.get("project_status") == "Ready To Move"]
+    if stem in ("upcoming-projects", "under-construction"):
+        return [p for p in PROJECTS if p.get("project_status") in ("Under Construction", "New Launch")]
+    if "new-launch" in stem:
+        return [p for p in PROJECTS if p.get("project_status") == "New Launch"]
+    # property type pages
+    if stem == "residential-projects-gurgaon":
+        return [p for p in PROJECTS if p.get("project_type") == "residential"]
+    if stem == "commercial-projects-gurgaon":
+        return [p for p in PROJECTS if p.get("project_type") == "commercial"]
+    if "buy-villas" in stem:
+        return [p for p in PROJECTS if 'villa' in text_blob(p)]
+    if "buy-plots" in stem:
+        return [p for p in PROJECTS if ('plotted' in text_blob(p) or 'residential plot' in text_blob(p)
+                or 'plots' in text_blob(p)) and 'floor plan' not in text_blob(p)]
+    if "sco-plots" in stem:
+        return [p for p in PROJECTS if 'sco' in text_blob(p)]
+    if "no-emi" in stem:
+        return [p for p in PROJECTS if 'no emi' in text_blob(p) or 'subvention' in text_blob(p)
+                or '0% emi' in text_blob(p)]
     return None  # generic / corridor page -> caller may use a fallback
 
 def build_landing(slug):
