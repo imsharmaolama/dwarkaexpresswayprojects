@@ -402,9 +402,10 @@ FOOTER = f"""<footer class="site-footer">
 </footer>"""
 
 def scripts(projects_js="[]"):
+    # root-absolute paths so JS/CSS resolve correctly from any subpage depth
     return f"""<script>window.__PROJECTS__={projects_js};</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<script src="js/site.js"></script>"""
+<script src="/js/site.js"></script>"""
 
 def phone_field(name="phone", required=True):
     return f"""<div class="phone-field">
