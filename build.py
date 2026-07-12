@@ -55,6 +55,19 @@ def clean_rich(html_str):
     html_str = re.sub(r'(<h4>)([^<]+)(</h4>)', add_icon, html_str)
     return html_str
 
+def rich(html_str):
+    """Render trusted scraped rich text: keep block tags (<p>,<br>,<ul>,<li>,<strong>,<em>,<b>,<i>),
+    strip scripts/styles/inline handlers. Returns '' for empty input."""
+    if not html_str:
+        return ""
+    s = str(html_str)
+    s = re.sub(r'<(script|style)\b[^>]*>.*?</\1>', '', s, flags=re.I | re.S)
+    s = re.sub(r'\son\w+="[^"]*"', '', s, flags=re.I)      # drop event handlers
+    return s.strip()
+
+def plain(html_str, limit=300):
+    """Flatten HTML to plain text (for <meta> descriptions)."""
+    return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', str(html_str or ""))).strip()[:limit]
 def img_link(im):
     if isinstance(im, dict):
         img = im.get("image") or {}
@@ -512,18 +525,20 @@ def build_listing(slug, title, plist, blurb="", is_home_route=False):
     cards = "".join(card(p) for p in plist)
     seo = SEO.get(slug) or {}
     h1 = seo.get("title") or title
-    desc = seo.get("footer_description") or blurb or (f"Browse {len(plist)} {title.lower()} on Dwarka Expressway, Gurgaon. RERA approved listings with prices, floor plans & amenities.")
+    desc_html = seo.get("footer_description") or blurb or f"<p>Browse {len(plist)} {esc(title.lower())} on Dwarka Expressway, Gurgaon. RERA approved listings with prices, floor plans &amp; amenities.</p>"
+    desc_intro = rich(desc_html)
+    meta_desc = plain(seo.get("description") or desc_html or title)
     html_doc = f"""<!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(h1)}</title>
-<meta name="description" content="{esc((seo.get('description') or desc)[:300])}">
+<meta name="description" content="{esc(meta_desc)}">
 <link rel="stylesheet" href="css/style.css">
 </head><body>
 {header()}
 <div class="breadcrumb"><div class="container"><a href="index.html">Home</a> / {esc(title)}</div></div>
 <section class="section"><div class="container">
   <h1 class="best_project_heading">{esc(title)}</h1>
-  <p class="section-sub">{esc(desc)}</p>
+  <div class="section-sub">{desc_intro}</div>
   <div class="listing-grid">{cards}</div>
 </section>
 <div class="container"><div class="seo-content">{seo_block(seo)}</div></div>
@@ -539,7 +554,7 @@ def seo_block(seo):
     if seo.get("footer_title"):
         out += f"<h2>{esc(seo['footer_title'])}</h2>"
     if seo.get("footer_description"):
-        out += f"<p>{esc(seo['footer_description'])}</p>"
+        out += rich(seo['footer_description'])
     return out or "<h2>About Dwarka Expressway</h2><p>Dwarka Expressway (also known as Northern Peripheral Road) is a 29.5 km expressway connecting Dwarka in Delhi to Kherki Daula on NH-48 in Gurgaon, emerging as the most sought-after real estate corridor in NCR.</p>"
 
 # ---------- detail pages ----------
@@ -734,31 +749,77 @@ def build_privacy():
 </body></html>"""
     open(os.path.join(ROOT,"privacy-policy.html"),"w",encoding="utf-8").write(html_doc)
 
+# developer landing slug (stem, no extension) -> substring matched against builder name
+DEV_MATCH = {
+    "adani":"adani","alphagcorp":"alpha","ansalhousing":"ansal","assotech":"assotech",
+    "ats-projects-in-gurgaon":"ats","bestech-projects-on-dwarka-expressway":"bestech","bptp":"bptp",
+    "dlf-projects-on-dwarka-expressway":"dlf","dlf-properties":"dlf","emaar-properties":"emaar",
+    "emaarmgf":"emaar","experion-developers":"experi","godrej-properties":"godrej","landmark":"landmark",
+    "m3m-projects-gurgaon":"m3m","microtekinfra":"microtek","puriconstructions":"puri",
+    "signature-global-gurgaon":"signature","sobhadevelopers":"sobha","ssgroup":"ss group",
+    "tata-projects-on-dwarka-expressway":"tata","vatika-projects-on-dwarka-expressway":"vatika",
+    "vatika-properties":"vatika",
+}
+
+def landing_projects(slug):
+    """Projects genuinely belonging to this developer/sector/type landing.
+    Returns a list (possibly empty) for a recognised page, or None for a
+    generic page where a curated fallback is acceptable."""
+    stem = re.sub(r'\.(php|html)$','',slug).strip().lower()
+    # developer pages -> match builder name
+    key = DEV_MATCH.get(stem)
+    if key:
+        return [p for p in PROJECTS if key in builder_name(p).lower()]
+    # sector pages -> match exact sector token in location/name
+    m = re.search(r'sector-([\d]+[a-z]?)-', stem)
+    if m:
+        num = m.group(1)
+        pat = re.compile(r'sector[\s\-]*0*'+re.escape(num)+r'(?![\da-z])', re.I)
+        return [p for p in PROJECTS if pat.search(loc_addr(p)) or pat.search(p.get("name") or "")]
+    # bhk / villa / plot type pages -> keyword match on configuration
+    m = re.search(r'(\d)\s*bhk', stem)
+    if m:
+        n=m.group(1)
+        return [p for p in PROJECTS if f"{n} bhk" in (p.get("configuration") or "").lower()
+                or f"{n}bhk" in (p.get("configuration") or "").lower()]
+    return None  # generic / corridor page -> caller may use a fallback
+
 def build_landing(slug):
-    # pick projects related to this landing (builder / sector / type keyword)
-    kw = re.sub(r'\.(php|html)$','',slug).lower()
-    kw = kw.replace('-',' ')
-    related = [p for p in PROJECTS if kw.split() and any(
-        (w in (p.get('name') or '').lower()) or (w in (builder_name(p).lower())) or (w in (loc_addr(p).lower()))
-        for w in kw.split() if len(w)>2)]
-    # if none, show all
-    if not related: related = PROJECTS[:12]
-    seo = SEO.get(slug) or {}
+    seo = SEO.get(slug) or SEO.get(slug+".html") or {}
+    related = landing_projects(slug)
+    recognised = related is not None          # dev/sector/type page (may be empty)
+    if related is None:
+        related = PROJECTS[:12]               # generic/corridor page -> curated fallback
     title = seo.get("title") or slug.replace('-',' ').replace('.php','').replace('.html','').title()
-    title = re.sub(r'\bDwarka Expressway\b','Dwarka Expressway',title)
-    desc = seo.get("footer_description") or f"Explore {title} on Dwarka Expressway, Gurgaon. Find RERA approved projects, prices, floor plans & amenities."
-    cards = "".join(card(p) for p in related)
+    desc_html = seo.get("footer_description") or ""
+    desc_intro = rich(desc_html)
+    if not plain(desc_intro):     # empty / whitespace-only -> use a real intro
+        label = title
+        if re.search(r'sector-([\d]+[a-z]?)-', slug.lower()):
+            n = re.search(r'sector-([\d]+[a-z]?)-', slug.lower()).group(1).upper()
+            label = f"projects in Sector {n}"
+        desc_intro = (f"<p>Explore {esc(label)} on Dwarka Expressway, Gurgaon — "
+                      f"{len(related)} RERA-approved {'project' if len(related)==1 else 'projects'} "
+                      f"with prices, floor plans &amp; amenities.</p>")
+    meta_desc = plain(seo.get("description") or desc_html or title)
+    if recognised and not related:            # known page with zero genuine matches
+        desc_intro = f"<p>No projects are currently listed for {esc(title)} on Dwarka Expressway. Explore all our projects or contact us for the latest availability.</p>"
+        grid = ('<div class="empty-state"><i class="fas fa-building-circle-xmark"></i>'
+                '<p>No projects available here right now.</p>'
+                '<a class="download-btn" href="residential-projects-gurgaon.html">Browse all projects</a></div>')
+    else:
+        grid = f'<div class="listing-grid">{"".join(card(p) for p in related)}</div>'
     html_doc = f"""<!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)}</title>
-<meta name="description" content="{esc((seo.get('description') or desc)[:300])}">
+<meta name="description" content="{esc(meta_desc)}">
 <link rel="stylesheet" href="css/style.css"></head><body>
 {header()}
 <div class="breadcrumb"><div class="container"><a href="index.html">Home</a> / {esc(title)}</div></div>
 <section class="section"><div class="container">
   <h1 class="best_project_heading">{esc(title)}</h1>
-  <p class="section-sub">{esc(desc)}</p>
-  <div class="listing-grid">{cards}</div>
+  <div class="section-sub">{desc_intro}</div>
+  {grid}
 </section>
 <div class="container"><div class="seo-content">{seo_block(seo)}</div></div>
 {FOOTER}{search_modal()}{enq_modal()}{scripts(json.dumps([mini(p) for p in PROJECTS], ensure_ascii=False))}

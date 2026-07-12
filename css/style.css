@@ -80,7 +80,13 @@ html,body{max-width:100%;overflow-x:hidden}
 /* ---------- Sections ---------- */
 .section{padding:54px 0}
 .best_project_heading{font-size:30px;font-weight:700;color:var(--heading);margin-bottom:6px}
-.section-sub{margin-bottom:26px;max-width:760px}
+.section-sub{margin-bottom:26px;max-width:860px}
+.section-sub p{margin-bottom:10px}
+.section-sub p:last-child{margin-bottom:0}
+.seo-content ul{margin:8px 0 12px 20px}.seo-content li{margin-bottom:6px}
+.empty-state{text-align:center;padding:56px 20px;color:var(--text-color)}
+.empty-state i{font-size:44px;color:var(--accent);margin-bottom:14px;display:block}
+.empty-state p{font-size:17px;margin-bottom:18px}
 .see-more{color:var(--primary-color);font-weight:700;cursor:pointer}
 .view-all{display:inline-flex;align-items:center;gap:6px;color:var(--primary-color);font-weight:700;margin-left:auto}
 /* download buttons (master plan / brochure) — themed to match site */
