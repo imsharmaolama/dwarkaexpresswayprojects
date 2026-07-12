@@ -1,9 +1,10 @@
-# Large reference scrapes (kept locally, not needed for deploy)
-main.js
-original.css
-home.html
-detail_test.json
-l2.json
-l3.json
-*.pyc
+*.html.html
+*.php
 __pycache__/
+check_links.py
+deploy.json
+vuser.json
+original.css
+main.js
+footer-ref.png
+megamenu-ref.png

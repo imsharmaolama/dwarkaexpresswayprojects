@@ -1,14 +1,32 @@
 /* ===== Dwarka Expressway Projects — shared site JS ===== */
 (function(){
-  const PHONE = "9999063322";
+  const PHONE = "9015883288";
+  const PHONE_FULL = "+919015883288";
+  const LEAD_EMAIL = "sharma.manish53@gmail.com";
   const PROJECTS = window.__PROJECTS__ || [];
+  const EMAIL_RE = /^[\w.+-]+@[\w-]+\.[\w.-]+$/;
 
-  /* ---- mobile menu ---- */
+  /* ---------- IP-based country code (flag + dial, local number only) ---------- */
+  async function applyCountryCode(){
+    try{
+      const r = await fetch('https://ipapi.co/json/');
+      const d = await r.json();
+      const code = (d.country_calling_code || d.calling_code || '+91').toString().replace(/\s/g,'');
+      const iso = (d.country_code || 'IN').toLowerCase();
+      const flag = 'https://flagcdn.com/24x18/'+iso+'.png';
+      document.querySelectorAll('#ccCode').forEach(el=>el.textContent = code);
+      document.querySelectorAll('#ccFlagImg').forEach(el=>{ el.src = flag; el.alt = (d.country_name||'country'); });
+      document.querySelectorAll('#ccFlag').forEach(el=>el.title = d.country_name||'');
+    }catch(e){ /* default +91 / India stays */ }
+  }
+  applyCountryCode();
+
+  /* ---------- mobile menu ---------- */
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('.main-nav');
-  if(toggle && nav){ toggle.addEventListener('click',()=>{ nav.style.display = nav.style.display==='flex'?'none':'flex'; }); }
+  if(toggle && nav){ toggle.addEventListener('click',()=>{ nav.classList.toggle('open'); }); }
 
-  /* ---- search overlay ---- */
+  /* ---------- search overlay ---------- */
   const openSearch = ()=>{ const m=document.getElementById('searchModal'); if(m){ m.classList.add('open'); const i=m.querySelector('input'); if(i) i.focus(); } };
   const closeSearch = ()=>{ const m=document.getElementById('searchModal'); if(m) m.classList.remove('open'); };
   document.querySelectorAll('[data-search-open]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();openSearch();}));
@@ -23,12 +41,12 @@
         const img=(p.images&&p.images[0]&&p.images[0].image&&p.images[0].image.s3_link)||'';
         const loc=(p.location&&p.location.address)||'';
         return `<a href="projects/${p.file}.html"><img src="${img}" alt="${p.name}" loading="lazy"><div><div class="s-name">${p.name}</div><div class="s-loc">${loc} &middot; ${p.starting_price||''}</div></div></a>`;
-      }).join('') : '<p style="padding:10px;color:#5a6a7a">No projects found.</p>';
+      }).join('') : '<p style="padding:10px;color:#566b63">No projects found.</p>';
     };
     sb.addEventListener('input',e=>render(e.target.value));
   }
 
-  /* ---- enquiry modal ---- */
+  /* ---------- enquiry modal ---------- */
   const enqModal = document.getElementById('enqModal');
   const enqTitle = document.getElementById('enqTitle');
   const enqProject = document.getElementById('enqProject');
@@ -38,36 +56,51 @@
   window.closeEnquiry = ()=>{ if(enqModal) enqModal.classList.remove('open'); };
   document.querySelectorAll('[data-enquire]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();window.openEnquiry(b.getAttribute('data-enquire'));}));
 
-  /* ---- gallery lightbox ---- */
+  /* ---------- gallery lightbox ---------- */
   const lb=document.getElementById('lightbox'); const lbImg=document.getElementById('lbImg');
   window.openLightbox=(src)=>{ if(lb){ lbImg.src=src; lb.classList.add('open'); } };
   window.closeLightbox=()=>{ if(lb) lb.classList.remove('open'); };
   if(lb) lb.addEventListener('click',window.closeLightbox);
 
-  /* ---- toast ---- */
-  const toast=(msg)=>{ let t=document.getElementById('toast'); if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t);} t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3200); };
+  /* ---------- toast ---------- */
+  const toast=(msg)=>{ let t=document.getElementById('toast'); if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t);} t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3400); };
 
-  /* ---- lead submit (posts to original Google-Sheets endpoint) ---- */
+  /* ---------- send lead to email (FormSubmit) ---------- */
+  async function sendLeadEmail(data){
+    const body = `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone} (${data.cc})\nProject: ${data.project}\nPage: ${data.page}\nNote: ${data.note}\nDate: ${data.date} ${data.time}`;
+    try{
+      await fetch('https://formsubmit.co/'+LEAD_EMAIL, {
+        method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body: JSON.stringify({ name:'Site Lead', subject:'New Enquiry: '+(data.project||'Website'), email: LEAD_EMAIL, message: body, _replyto: data.email })
+      });
+    }catch(e){ /* offline-safe */ }
+  }
+
+  /* ---------- lead submit ---------- */
+  function getPhone(form){
+    // phone field may be plain input or ip-based .phone-field wrapper
+    const pf = form.querySelector('.phone-field input');
+    if(pf){ const cc = (form.querySelector('#ccCode')||{}).textContent || '+91'; const num = pf.value.trim(); return { num, cc, full: cc.replace(/\s/g,'')+num }; }
+    const plain = form.phone; if(plain) return { num: plain.value.trim(), cc:'+91', full: '+91'+plain.value.trim() };
+    return { num:'', cc:'+91', full:'' };
+  }
   async function submitLead(form, extra){
+    const ph = getPhone(form);
     const data = {
       name: form.name.value.trim(),
       email: form.email.value.trim(),
-      phone: form.phone.value.trim(),
+      phone: ph.full,
+      cc: ph.cc,
       note: (form.note && form.note.value.trim())||'',
-      pageLocation: location.href,
+      page: location.href,
       project: extra && extra.project || (form.project && form.project.value)||'',
       date: new Date().toLocaleDateString(),
       time: new Date().toLocaleTimeString()
     };
-    if(!data.name || !/^[\w.+-]+@[\w-]+\.[\w.-]+$/.test(data.email) || !/^\d{10}$/.test(data.phone)){
-      toast('Please enter a valid name, email & 10-digit phone.'); return false;
+    if(!data.name || !EMAIL_RE.test(data.email) || !/^\d{6,14}$/.test(ph.num.replace(/[^\d]/g,''))){
+      toast('Please enter a valid name, email & phone number.'); return false;
     }
-    try{
-      await fetch('https://v1.nocodeapi.com/dwarkaexpressway/google_sheets/CQjlqWJyvQCdwALG?tabId=Sheet1',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify([[data.date,data.time,data.pageLocation,data.note,data.name,data.email,data.phone]])
-      });
-    }catch(e){ /* endpoint may block CORS; still show success locally */ }
+    await sendLeadEmail(data);
     return true;
   }
   document.querySelectorAll('form[data-lead]').forEach(form=>{
@@ -78,7 +111,32 @@
     });
   });
 
-  /* ---- close on escape ---- */
+  /* ---------- newsletter ---------- */
+  document.querySelectorAll('form[data-newsletter]').forEach(form=>{
+    form.addEventListener('submit',e=>{ e.preventDefault(); toast('Subscribed! We will keep you updated.'); form.reset(); });
+  });
+
+  /* ---------- lead-gate downloads (master plan / brochure) ---------- */
+  document.querySelectorAll('.lead-gate').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const url = btn.getAttribute('data-url');
+      const label = btn.getAttribute('data-label')||'Document';
+      const name = prompt('Enter your name to download the '+label+':');
+      if(name===null) return;
+      const email = prompt('Enter your email:');
+      if(email===null) return;
+      const phone = prompt('Enter your mobile number:');
+      if(phone===null) return;
+      if(!EMAIL_RE.test(email.trim()) || !/^\d{6,14}$/.test(phone.replace(/[^\d]/g,''))){
+        toast('Please enter a valid email & phone.'); return;
+      }
+      await sendLeadEmail({ name:name.trim(), email:email.trim(), phone:'+'+phone.replace(/[^\d]/g,''), cc:'+91', project:label, page:location.href, note:'Downloaded '+label, date:new Date().toLocaleDateString(), time:new Date().toLocaleTimeString() });
+      toast('Lead captured — starting download…');
+      window.open(url,'_blank');
+    });
+  });
+
+  /* ---------- close on escape ---------- */
   document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeSearch(); window.closeEnquiry&&window.closeEnquiry(); window.closeLightbox&&window.closeLightbox(); }});
   document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>{ const t=b.getAttribute('data-close'); if(t==='search')closeSearch(); if(t==='enq')window.closeEnquiry(); }));
 })();
