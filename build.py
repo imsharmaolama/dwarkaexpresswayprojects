@@ -294,7 +294,7 @@ def header(active=""):
     </div>
   </div>
   <div class="container header-inner">
-    <a href="index.html" class="brand"><img src="assets/logo.png" alt="Dwarka Expressway Projects logo"></a>
+    <a href="index.html" class="brand"><img src="assets/logo-2d.png" alt="Dwarka Expressway Projects logo"></a>
     {MEGA}
     <div class="header-cta">
       <a class="phone-btn" href="tel:{PHONE_FULL}"><i class="fas fa-phone"></i> {PHONE_FULL}</a>
@@ -319,11 +319,13 @@ FOOTER = f"""<footer class="site-footer">
   </div>
   <div class="container footer-grid">
     <div>
-      <img class="footer-logo" src="assets/logo.png" alt="Dwarka Expressway Projects">
-      <p>Your trusted partner for premium residential &amp; commercial properties along Dwarka Expressway, Gurgaon.</p>
-      <p><i class="fas fa-phone"></i> <a href="tel:{PHONE_FULL}" style="color:#fff;font-weight:700">{PHONE_FULL}</a></p>
-      <p><i class="fas fa-envelope"></i> info@dwarkaexpresswayprojects.com</p>
-      <p><i class="fas fa-map-marker-alt"></i> Sector 88, Gurgaon, Haryana</p>
+      <img class="footer-logo" src="assets/logo-white.png" alt="Dwarka Expressway Projects">
+      <p class="footer-brand-desc">Your trusted partner for premium residential &amp; commercial properties along Dwarka Expressway, Gurgaon. Discover the best projects, top developers &amp; unmatched investment opportunities.</p>
+      <ul class="footer-contact">
+        <li><i class="fas fa-phone"></i> <a href="tel:{PHONE_FULL}">{PHONE_FULL}</a></li>
+        <li><i class="fas fa-envelope"></i> info@dwarkaexpresswayprojects.in</li>
+        <li><i class="fas fa-map-marker-alt"></i> Sector 88, Gurugram, Haryana 122505</li>
+      </ul>
       <div class="footer-social">
         <a href="#" aria-label="facebook"><i class="fab fa-facebook-f"></i></a>
         <a href="#" aria-label="instagram"><i class="fab fa-instagram"></i></a>
@@ -562,7 +564,7 @@ def build_detail(p):
     slug = p["slug"]
     imgs = [img_link(im) for im in (p.get("images") or [])]
     imgs = [i for i in imgs if i]
-    gallery = "".join(f'<img src="{i}" alt="{esc(p["name"])}" loading="lazy" onclick="openLightbox(\'{i}\')">' for i in imgs) or f'<img src="{first_img(p)}" alt="{esc(p["name"])}">'
+    gallery = "".join(f'<img src="{i}" alt="{esc(p["name"])}" loading="lazy" onclick="openLightbox(\'{i}\')">' for i in imgs) or f'<img src="../assets/logo-2d.png" alt="{esc(p["name"])}">'
     loc = loc_addr(p)
     bname = builder_name(p)
     price = p.get("starting_price") or "Call for Price"
