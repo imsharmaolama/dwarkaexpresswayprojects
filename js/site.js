@@ -111,6 +111,7 @@
         form.reset();
         showThanks();
         if(enqModal) enqModal.classList.remove('open');
+        if(pendingDownload){ const u=pendingDownload; pendingDownload=null; setTimeout(()=>window.open(u,'_blank'),600); }
       }
     });
   });
@@ -147,24 +148,16 @@
   });
 
   /* ---------- lead-gate downloads (master plan / brochure) ---------- */
+  /* open the SAME enquiry modal; after submit + thank-you, trigger the download */
+  let pendingDownload = null;
   document.querySelectorAll('.lead-gate').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      const url = btn.getAttribute('data-url');
-      const label = btn.getAttribute('data-label')||'Document';
-      const name = prompt('Enter your name to download the '+label+':');
-      if(name===null) return;
-      const email = prompt('Enter your email:');
-      if(email===null) return;
-      const phone = prompt('Enter your mobile number:');
-      if(phone===null) return;
-      if(!EMAIL_RE.test(email.trim()) || !/^\d{6,14}$/.test(phone.replace(/[^\d]/g,''))){
-        toast('Please enter a valid email & phone.'); return;
-      }
-      await sendLeadEmail({ name:name.trim(), email:email.trim(), phone:'+'+phone.replace(/[^\d]/g,''), cc:'+91', project:label, page:location.href, note:'Downloaded '+label, date:new Date().toLocaleDateString(), time:new Date().toLocaleTimeString() });
-      toast('Lead captured — starting download…');
-      window.open(url,'_blank');
+    btn.addEventListener('click', ()=>{
+      pendingDownload = btn.getAttribute('data-url');
+      const project = btn.getAttribute('data-enquire') || '';
+      window.openEnquiry(project ? (project+' — '+btn.getAttribute('data-label')) : 'Download '+btn.getAttribute('data-label'));
     });
   });
+  // after a successful lead submit, fire any pending download
 
   /* ---------- close on escape ---------- */
   document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeSearch(); window.closeEnquiry&&window.closeEnquiry(); window.closeLightbox&&window.closeLightbox(); }});

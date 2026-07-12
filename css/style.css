@@ -28,7 +28,7 @@ html,body{max-width:100%;overflow-x:hidden}
 .header-bar .container{display:flex;align-items:center;justify-content:space-between;height:40px;font-size:13px}
 .header-bar a{color:#dff3ea;font-weight:600}
 .header-bar .hb-right{display:flex;gap:18px;align-items:center}
-.header-inner{display:flex;align-items:center;justify-content:space-between;height:74px}
+.header-inner{display:flex;align-items:center;justify-content:space-between;height:74px;position:relative}
 .brand{display:flex;align-items:center;gap:10px}
 .brand img{height:48px;width:auto;background:#fff;border-radius:12px;padding:5px 7px;box-shadow:0 2px 10px rgba(13,92,70,.12)}
 .brand .brand-text{display:none} /* logo is mark-only, no text */
@@ -37,12 +37,14 @@ html,body{max-width:100%;overflow-x:hidden}
 .main-nav>li>a{padding:0 16px;font-weight:700;color:var(--heading);font-size:15px;height:100%;display:flex;align-items:center;transition:.2s;text-transform:uppercase;letter-spacing:.3px}
 .main-nav>li>a:hover,.main-nav>li:hover>a{color:var(--primary-color);background:var(--accent-soft)}
 .main-nav>li.has-mega>a::after{content:'\25BE';margin-left:6px;font-size:11px;color:var(--accent)}
-/* mega panel — anchored to viewport so it spans full width below the header, never overflows page */
+/* mega panel — anchored to .header-inner so it sits flush under the nav (no
+   gap over the popular strip) and spans full width; inner .container re-centers */
 .main-nav>li.has-mega{position:static}
 .mega{position:absolute;top:100%;left:0;right:0;width:100%;background:#fff;border-top:3px solid var(--accent);
   box-shadow:0 18px 40px rgba(13,92,70,.16);display:none;padding:26px 0;z-index:998}
-.main-nav>li.has-mega:hover .mega{display:block}
-.mega-grid{display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr 1.4fr;gap:26px}
+.mega .container{max-width:1200px;margin:0 auto;width:100%}
+.mega-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:28px}
+.main-nav>li.has-mega:hover .mega,.main-nav>li.has-mega:focus-within .mega{display:block}
 .mega-col h5{color:var(--primary-color);font-size:14px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .mega-col ul{list-style:none}
 .mega-col li a{display:flex;align-items:center;gap:9px;padding:7px 0;color:var(--text-color);font-size:14px;font-weight:600;transition:.15s}
@@ -55,8 +57,8 @@ html,body{max-width:100%;overflow-x:hidden}
 .feat-card .fc-name{font-weight:700;color:var(--heading);font-size:13px;line-height:1.2}
 .feat-card .fc-meta{font-size:12px;color:var(--text-color)}
 .feat-card .fc-link{color:var(--primary-color);font-weight:700;font-size:12px}
-.popular-strip{background:var(--bg-soft);border-top:1px solid var(--border);padding:11px 0;font-size:13px}
-.popular-strip .container{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.popular-strip{background:var(--bg-soft);border-top:1px solid var(--border);padding:11px 0;font-size:13px;width:100%}
+.popular-strip .container{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:none!important;width:100%}
 .popular-strip .ps-label{font-weight:800;color:var(--primary-color);display:inline-flex;align-items:center;gap:6px}
 .popular-strip a{color:var(--text-color);font-weight:600;padding:2px 8px}
 .popular-strip a:hover{color:var(--primary-color)}
@@ -87,6 +89,9 @@ html,body{max-width:100%;overflow-x:hidden}
 .section-sub{margin-bottom:26px;max-width:760px}
 .see-more{color:var(--primary-color);font-weight:700;cursor:pointer}
 .view-all{display:inline-flex;align-items:center;gap:6px;color:var(--primary-color);font-weight:700;margin-left:auto}
+/* download buttons (master plan / brochure) — themed to match site */
+.download-btn{display:inline-flex;align-items:center;gap:8px;background:var(--primary-color);color:#fff;border:none;border-radius:10px;padding:12px 20px;font-weight:700;font-size:14px;cursor:pointer;transition:.2s}
+.download-btn:hover{background:var(--primary-dark);transform:translateY(-1px)}
 .section-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:24px}
 
 /* ---------- Project cards ---------- */

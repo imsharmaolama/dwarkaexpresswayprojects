@@ -226,18 +226,28 @@ def build_mega():
                       f'<div><div class="fc-name">{esc(p["name"])}</div>'
                       f'<div class="fc-meta">{esc(p.get("configuration") or "")} &middot; {esc(p.get("starting_price") or "")}</div>'
                       f'<div class="fc-link">View Details &rarr;</div></div></a>')
-    # Sectors grouped
-    def sec_list(prefix_low, prefix_up):
-        items=[]
-        for s in ALLURLS:
-            if s.startswith(prefix_low) or s.startswith(prefix_up):
-                nm = s.replace('.html','').replace(prefix_low,'').replace(prefix_up,'').replace('-',' ').strip()
-                items.append(f'<li><a href="{page_file(s)}"><i class="fas fa-map-pin"></i> Sector {esc(nm)}</a></li>')
-        return "".join(items[:7])
-    sec_a = sec_list("projects-in-sector-8","projects-in-sector-8")
-    sec_b = sec_list("projects-in-sector-9","projects-in-sector-9")
-    sec_c = sec_list("projects-in-sector-10","projects-in-sector-10")
-    sec_d = sec_list("projects-in-sector-11","projects-in-sector-11")
+    # Sectors grouped — extract real sector number from slug
+    import re as _re
+    _sec=[]
+    _seen=set()
+    for s in ALLURLS:
+        m=_re.search(r'projects-in-sector-([\d]+(?:\.[\da-z]+)?)-gurgaon\.html', s)
+        if m:
+            num=m.group(1)
+            if num not in _seen:
+                _seen.add(num); _sec.append((num, s))
+    def sec_col(lo, hi):
+        out=[]
+        for num, sl in _sec:
+            try: n=float(_re.sub(r'[a-z]','',num))
+            except: n=0
+            if lo<=n<=hi:
+                out.append(f'<li><a href="{page_file(sl)}"><i class="fas fa-map-pin"></i> Sector {esc(num.upper())}</a></li>')
+        return "".join(out[:8])
+    sec_a = sec_col(81,90)
+    sec_b = sec_col(91,100)
+    sec_c = sec_col(101,110)
+    sec_d = sec_col(111,115)
     # Developers from landing pages
     dev_map = {
         "dlf-properties.html":"DLF","vatika-properties.html":"Vatika","signature-global-gurgaon.html":"Signature Global",
@@ -579,8 +589,8 @@ def build_detail(p):
     mp = (p.get("master_plan") or {}).get("s3_link")
     brochure = (p.get("brochure") or {}).get("s3_link")
     downloads = ""
-    if mp: downloads += f'<button class="view-all lead-gate" data-url="{esc(mp)}" data-label="Master Plan">Download Master Plan</button> '
-    if brochure: downloads += f'<button class="view-all lead-gate" data-url="{esc(brochure)}" data-label="Brochure">Download Brochure</button>'
+    if mp: downloads += f'<button class="download-btn lead-gate" data-url="{esc(mp)}" data-label="Master Plan" data-enquire="{esc(p["name"])}">Download Master Plan</button> '
+    if brochure: downloads += f'<button class="download-btn lead-gate" data-url="{esc(brochure)}" data-label="Brochure" data-enquire="{esc(p["name"])}">Download Brochure</button>'
 
     html_doc = f"""<!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
