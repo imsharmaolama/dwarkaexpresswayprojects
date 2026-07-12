@@ -13,7 +13,7 @@ PHONE = "9999063322"
 SITE = "https://www.dwarkaexpresswayprojects.in"  # original, for reference in footer
 
 def slug_file(s):
-    return s.replace("/", "-").strip()
+    return s.replace("/", "-").replace("&", "and").replace(" ", "-").strip()
 
 def esc(s):
     return html.escape(str(s or ""), quote=True)
@@ -362,6 +362,7 @@ def main():
     build_listing("best-deals", "Best Projects on Dwarka Expressway", sorted(PROJECTS, key=lambda x:-(x.get('ratings') or 0))[:20], "Hand-picked best-rated projects on Dwarka Expressway.")
     build_listing("projects-list", "All Projects on Dwarka Expressway", PROJECTS, "Complete list of projects on Dwarka Expressway, Gurgaon.")
     build_listing("luxury-projects", "Luxury Projects", [p for p in PROJECTS if 'luxury' in (p.get('tagline') or '').lower() or 'Luxury' in (p.get('project_tag') or '')], "Luxury residences on Dwarka Expressway.")
+    build_listing("buy-plots", "Buy Plots on Dwarka Expressway", [p for p in PROJECTS if 'plot' in (p.get('project_type') or '').lower() or 'Plot' in (p.get('name') or '')], "Residential & SCO plots on Dwarka Expressway, Gurgaon.")
     # contact + privacy
     build_contact()
     build_privacy()
