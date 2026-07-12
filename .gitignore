@@ -1,0 +1,9 @@
+# Large reference scrapes (kept locally, not needed for deploy)
+main.js
+original.css
+home.html
+detail_test.json
+l2.json
+l3.json
+*.pyc
+__pycache__/
