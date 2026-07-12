@@ -16,8 +16,8 @@ LEAD_EMAIL = "sharma.manish53@gmail.com"
 SITE = "https://www.dwarkaexpresswayprojects.in"  # original, for reference in footer
 
 def slug_file(s):
-    """Sanitize a project slug for use as a project detail filename (handles / & space)."""
-    return s.replace("/", "-").replace("&", "and").replace(" ", "-").strip()
+    """Sanitize a project slug for use as a project detail filename (handles / & space ')."""
+    return s.replace("/", "-").replace("&", "and").replace("'", "").replace("\u2019", "").replace(" ", "-").strip()
 
 def page_file(slug):
     """Return the on-disk filename + link href for a site slug (handles .html/.php suffixes)."""
