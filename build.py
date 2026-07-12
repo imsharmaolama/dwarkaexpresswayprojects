@@ -97,23 +97,22 @@ MEGA = f"""
           <li><a href="2bhk-apartment-on-dwarka-expressway.html"><i class="fas fa-building"></i> 2 BHK Apartments</a></li>
           <li><a href="3bhk-apartment-on-dwarka-expressway.html"><i class="fas fa-building"></i> 3 BHK Apartments</a></li>
           <li><a href="4bhk-apartment-on-dwarka-expressway.html"><i class="fas fa-building"></i> 4 BHK Apartments</a></li>
-          <li><a href="luxury-projects.html"><i class="fas fa-home"></i> Luxury Villas</a></li>
-          <li><a href="residential-projects-gurgaon.html"><i class="fas fa-warehouse"></i> Penthouse</a></li>
-          <li><a href="commercial-projects-gurgaon.html"><i class="fas fa-store"></i> Commercial Spaces</a></li>
-          <li><a href="residential-projects-gurgaon.html"><i class="fas fa-couch"></i> Studio Apartments</a></li>
-          <li><a href="residential-projects-gurgaon.html"><i class="fas fa-house-damage"></i> Duplex / Triplex</a></li>
+          <li><a href="5bhk-apartment-on-dwarka-expressway.html"><i class="fas fa-building"></i> 5 BHK Apartments</a></li>
+          <li><a href="buy-villas-on-dwarka-expressway.html"><i class="fas fa-home"></i> Luxury Villas</a></li>
+          <li><a href="buy-plots-on-dwarka-expressway.html"><i class="fas fa-map"></i> Residential Plots</a></li>
+          <li><a href="sco-plots-gurgaon.html"><i class="fas fa-store"></i> SCO Plots</a></li>
+          <li><a href="commercial-projects-gurgaon.html"><i class="fas fa-city"></i> Commercial Spaces</a></li>
         </ul>
       </div>
       <div class="mega-col">
         <h5><i class="fas fa-wallet"></i> By Budget</h5>
         <ul>
-          <li><a href="projects-list.html"><span class="budget-ico">&lt;50</span> Under 50 Lakhs</a></li>
-          <li><a href="projects-list.html"><span class="budget-ico">50</span> 50 Lakhs - 75 Lakhs</a></li>
-          <li><a href="property-1cr-1.5cr-on-dwarka-expressway.html"><span class="budget-ico">75</span> 75 Lakhs - 1 Crore</a></li>
-          <li><a href="property-1cr-1.5cr-on-dwarka-expressway.html"><span class="budget-ico">1</span> 1 Cr - 1.5 Cr</a></li>
-          <li><a href="property-2cr-3cr-on-dwarka-expressway.html"><span class="budget-ico">1.5</span> 1.5 Cr - 2 Cr</a></li>
-          <li><a href="property-2cr-3cr-on-dwarka-expressway.html"><span class="budget-ico">2</span> 2 Cr - 3 Cr</a></li>
-          <li><a href="property-2cr-3cr-on-dwarka-expressway.html"><span class="budget-ico">3+</span> Above 3 Crores</a></li>
+          <li><a href="affordable-housing-projects.html"><span class="budget-ico">₹</span> Affordable Housing</a></li>
+          <li><a href="property-1cr-1.5cr-on-dwarka-expressway.html"><span class="budget-ico">1</span> ₹1 Cr - 1.5 Cr</a></li>
+          <li><a href="property-2cr-3cr-on-dwarka-expressway.html"><span class="budget-ico">2</span> ₹2 Cr - 3 Cr</a></li>
+          <li><a href="luxury-projects.html"><span class="budget-ico">3+</span> Luxury (₹3 Cr+)</a></li>
+          <li><a href="no-emi-projects.html"><span class="budget-ico">0%</span> No EMI Till Possession</a></li>
+          <li><a href="best-deals.html"><span class="budget-ico">%</span> Best Deals &amp; Offers</a></li>
         </ul>
       </div>
       <div class="mega-col">
@@ -122,22 +121,21 @@ MEGA = f"""
           <li><a href="ready-to-move-flats-in-dwarka-expressway-gurgaon.html"><i class="fas fa-check-circle"></i> Ready to Move</a></li>
           <li><a href="upcoming-projects.html"><i class="fas fa-crane"></i> Under Construction</a></li>
           <li><a href="upcoming-projects.html"><i class="fas fa-rocket"></i> New Launch</a></li>
-          <li><a href="ready-to-move-flats-in-dwarka-expressway-gurgaon.html"><i class="fas fa-file-alt"></i> OC Received</a></li>
-          <li><a href="upcoming-projects.html"><i class="fas fa-calendar"></i> Near Possession (6 mo)</a></li>
-          <li><a href="upcoming-projects.html"><i class="fas fa-calendar"></i> Near Possession (1 yr)</a></li>
+          <li><a href="residential-projects-gurgaon.html"><i class="fas fa-city"></i> All Residential</a></li>
+          <li><a href="commercial-projects-gurgaon.html"><i class="fas fa-store"></i> All Commercial</a></li>
         </ul>
       </div>
       <div class="mega-col">
-        <h5><i class="fas fa-star"></i> By Amenities</h5>
+        <h5><i class="fas fa-map-marker-alt"></i> Popular Locations</h5>
         <ul>
-          <li><a href="residential-projects-gurgaon.html"><i class="fas fa-swimmer"></i> Swimming Pool</a></li>
-          <li><a href="residential-projects-gurgaon.html"><i class="fas fa-dumbbell"></i> Gym / Fitness</a></li>
-          <li><a href="residential-projects-gurgaon.html"><i class="fas fa-building"></i> Club House</a></li>
-          <li><a href="residential-projects-gurgaon.html"><i class="fas fa-child"></i> Kids Play Area</a></li>
-          <li><a href="residential-projects-gurgaon.html"><i class="fas fa-running"></i> Jogging Track</a></li>
-          <li><a href="residential-projects-gurgaon.html"><i class="fas fa-shield-alt"></i> 24/7 Security</a></li>
-          <li><a href="residential-projects-gurgaon.html"><i class="fas fa-bolt"></i> Power Backup</a></li>
-          <li><a href="residential-projects-gurgaon.html"><i class="fas fa-car"></i> Covered Parking</a></li>
+          <li><a href="projects-in-sector-102-gurgaon.html"><i class="fas fa-map-pin"></i> Sector 102</a></li>
+          <li><a href="projects-in-sector-106-gurgaon.html"><i class="fas fa-map-pin"></i> Sector 106</a></li>
+          <li><a href="projects-in-sector-108-gurgaon.html"><i class="fas fa-map-pin"></i> Sector 108</a></li>
+          <li><a href="projects-in-sector-111-gurgaon.html"><i class="fas fa-map-pin"></i> Sector 111</a></li>
+          <li><a href="projects-in-sector-88a-gurgaon.html"><i class="fas fa-map-pin"></i> Sector 88A</a></li>
+          <li><a href="ready-to-move-flats-in-dwarka-expressway-gurgaon.html"><i class="fas fa-check-circle"></i> Ready to Move Flats</a></li>
+          <li><a href="upcoming-projects.html"><i class="fas fa-rocket"></i> New Launches</a></li>
+          <li><a href="sco-plots-gurgaon.html"><i class="fas fa-store"></i> SCO Plots</a></li>
         </ul>
       </div>
       <div class="mega-col">
@@ -189,9 +187,6 @@ MEGA = f"""
   <li><a href="contact.html">About</a></li>
   <li><a href="contact.html">Contact</a></li>
 </nav>"""
-
-POPULAR = ["DLF Projects","New Launch Projects","Ready to Move Flats","Under Construction Projects","Luxury Apartments","Golf Course Road Ext.","Sectors 102-113"]
-POPULAR_LINKS = ["dlf-properties","residential-projects-gurgaon","ready-to-move-flats-in-dwarka-expressway-gurgaon","upcoming-projects","luxury-projects","projects-list","projects-list"]
 
 def prefix_rel(html, depth):
     """Prefix internal relative hrefs/src with '../' * depth for subpages (projects/)."""
@@ -253,8 +248,8 @@ def build_mega():
         "dlf-properties.html":"DLF","vatika-properties.html":"Vatika","signature-global-gurgaon.html":"Signature Global",
         "godrej-properties.html":"Godrej","tata-projects-on-dwarka-expressway.html":"Tata Housing","sobhadevelopers.html":"Sobha",
         "ats-projects-in-gurgaon.html":"ATS","m3m-projects-gurgaon.html":"M3M","emaar-properties.html":"Emaar",
-        "adani.php":"Adani","bestech-projects-on-dwarka-expressway.html":"Bestech","experion-developers.php":"Experion",
-        "ansalhousing.php":"Ansal Housing","puriconstructions.php":"Puri","alphagcorp":"Alpha G Corp","ssgroup.html":"SS Group",
+        "adani.html":"Adani","bestech-projects-on-dwarka-expressway.html":"Bestech","experion-developers.html":"Experion",
+        "ansalhousing.html":"Ansal Housing","puriconstructions.html":"Puri","alphagcorp.html":"Alpha G Corp","ssgroup.html":"SS Group",
         "microtekinfra.html":"Microtek","assotech.html":"Assotech","landmark.html":"Landmark","vatika-properties.html":"Vatika"
     }
     dev_items = list(dev_map.items())
@@ -294,10 +289,6 @@ def header(active=""):
       <button class="menu-toggle" aria-label="menu">&#9776;</button>
     </div>
   </div>
-  <div class="popular-strip"><div class="container">
-    <span class="ps-label"><i class="fas fa-search"></i> Popular Searches:</span>
-    {"".join(f'<a href="{l}.html">{t}</a><span class="sep">|</span>' for t,l in zip(POPULAR,POPULAR_LINKS))}
-  </div></div>
 </header>"""
 
 FOOTER = f"""<footer class="site-footer">
