@@ -42,9 +42,22 @@ def authed(qs):
 
 # ---------------- publish pipeline ----------------
 def publish():
-    """Run build.py then git add/commit/push. Returns (ok, log)."""
+    """Run build.py then git add/commit/push. Returns (ok, log).
+    On Railway (or any env with GITHUB_TOKEN), pushes via HTTPS with the token.
+    Locally (no token) uses the existing git remote/credentials."""
     log = []
+    token = os.environ.get("GITHUB_TOKEN")
     try:
+        # git identity (needed for commits in CI/railway)
+        for k, v in (("user.name", os.environ.get("GIT_NAME", "DEP CMS")),
+                     ("user.email", os.environ.get("GIT_EMAIL", "cms@dep.local"))):
+            subprocess.run(["git", "config", "user." + k.split(".")[1], v],
+                           cwd=ROOT, capture_output=True, text=True, timeout=60)
+        if token:
+            # rewrite origin to use the token (Railway clone is HTTPS)
+            subprocess.run(["git", "remote", "set-url", "origin",
+                            f"https://{token}@github.com/imsharmaolama/dwarkaexpresswayprojects.git"],
+                           cwd=ROOT, capture_output=True, text=True, timeout=60)
         r = subprocess.run(["python", "build.py"], cwd=ROOT, capture_output=True, text=True, timeout=600)
         log.append(r.stdout.strip() or r.stderr.strip())
         if r.returncode != 0:
@@ -202,8 +215,8 @@ class H(BaseHTTPRequestHandler):
             self._send(200, {"ok": True})
         else:
             self._send(404, {"error": "unknown route"})
-
+PORT = int(os.environ.get("PORT", os.environ.get("CMS_PORT", "8081")))
 if __name__ == "__main__":
-    srv = ThreadingHTTPServer(("127.0.0.1", PORT), H)
-    print(f"CMS running at http://127.0.0.1:{PORT}  (password: {DEFAULT_PW})")
+    srv = ThreadingHTTPServer(("0.0.0.0", PORT), H)
+    print(f"CMS running at http://0.0.0.0:{PORT}  (password: {DEFAULT_PW})")
     srv.serve_forever()

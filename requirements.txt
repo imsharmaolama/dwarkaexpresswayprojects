@@ -1,0 +1,2 @@
+# No third-party deps — cms.py uses only the Python standard library.
+# Listed for clarity / Railway build step.
