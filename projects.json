@@ -51,6 +51,13 @@
   },
   "images": [
    {
+    "name": "verify_cms.jpg",
+    "alt": "VA",
+    "image": {
+     "s3_link": "https://dwarkaexpressway-bucket.s3.ap-south-1.amazonaws.com/images/verify_cms.jpg"
+    }
+   },
+   {
     "name": "Krisumi Waterfall Residences 3.jpg",
     "alt": "Krisumi Waterfall Residences 3.jpg",
     "image": {
@@ -90,13 +97,6 @@
     "alt": "Krisumi Waterfall Residences 2.jpg",
     "image": {
      "s3_link": "https://dwarkaexpressway-bucket.s3.ap-south-1.amazonaws.com/images/e05a7c58b7c5e3b1e1d57b21bf85a9.jpg"
-    }
-   },
-   {
-    "name": "Krisumi Waterfall Residences 4.jpeg",
-    "alt": "Krisumi Waterfall Residences 4.jpeg",
-    "image": {
-     "s3_link": "https://dwarkaexpressway-bucket.s3.ap-south-1.amazonaws.com/images/2a0a4a2fd3a2ecddf22da78f8cf74c.jpeg"
     }
    }
   ],
@@ -205,7 +205,13 @@
     ]
    }
   ],
-  "seo": {},
+  "seo": {
+   "title": "Krisumi Waterfall Residences in Sector 36A, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Krisumi Waterfall Residences in Sector 36A, Gurugram by Krisumi is a premium residential project offering Studio 2,3,4 BHK. Starting price 2.90 Cr. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Krisumi Waterfall Residences, Sector 36A, Gurugram, residential projects, Dwarka Expressway, Krisumi, Studio 2,3,4 BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
+  },
   "geo_location": {
    "type": null,
    "coordinates": null
@@ -21673,10 +21679,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Emaar The 88 in Sector 112, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Emaar The 88 in Sector 112, Gurugram by Emaar India is a premium residential project offering 2BHK, 3BHK. Starting price 1.92Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Emaar The 88, Sector 112, Gurugram, residential projects, Dwarka Expressway, Emaar India, 2BHK, 3BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -21808,10 +21815,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "TREVOC Royal Residences in Sector 56, Gurugram | Price, Floor Plan & Brochure",
+   "description": "TREVOC Royal Residences in Sector 56, Gurugram by Trevoc Group is a premium residential project offering 3BHK, 4BHK. Starting price 6.34Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "TREVOC Royal Residences, Sector 56, Gurugram, residential projects, Dwarka Expressway, Trevoc Group, 3BHK, 4BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -21941,10 +21949,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "County The Center Court  in Sector 88A, Gurugram | Price, Floor Plan & Brochure",
+   "description": "County The Center Court  in Sector 88A, Gurugram by County Group is a premium residential project offering 2.5bhk, 3bhk+srv. Starting price 1.96Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "County The Center Court , Sector 88A, Gurugram, residential projects, Dwarka Expressway, County Group, 2.5bhk, 3bhk+srv Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -22100,10 +22109,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Eldeco Fairway Reserve in Sector 80, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Eldeco Fairway Reserve in Sector 80, Gurugram by Eldeco Infrastructure & Properties Ltd. is a premium residential project offering 3BHK, 4BHK, 4BHK+S. Starting price 3.41Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Eldeco Fairway Reserve, Sector 80, Gurugram, residential projects, Dwarka Expressway, Eldeco Infrastructure & Properties Ltd., 3BHK, 4BHK, 4BHK+S Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -22265,10 +22275,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Emaar Urban Ascent in Sector 112, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Emaar Urban Ascent in Sector 112, Gurugram by Emaar India is a premium residential project offering 2BHK, 3.5BHK, 4.5BHK. Starting price 4.92Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Emaar Urban Ascent, Sector 112, Gurugram, residential projects, Dwarka Expressway, Emaar India, 2BHK, 3.5BHK, 4.5BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -23697,10 +23708,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "India World Mart in Sector 88A, Gurugram | Price, Floor Plan & Brochure",
+   "description": "India World Mart in Sector 88A, Gurugram by Better Choice Realtors is a premium commercial project offering 87ssq yards onwards. Starting price 4Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "India World Mart, Sector 88A, Gurugram, commercial projects, Dwarka Expressway, Better Choice Realtors, 87ssq yards onwards Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -24086,10 +24098,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Emaar Serenity Hills Gurugram in Sector 86, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Emaar Serenity Hills Gurugram in Sector 86, Gurugram by Emaar India is a premium residential project offering 3BHK, 4BHK. Starting price 2.98 Cr. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Emaar Serenity Hills Gurugram, Sector 86, Gurugram, residential projects, Dwarka Expressway, Emaar India, 3BHK, 4BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -24257,10 +24270,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Central Park Delphine in Sector 104, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Central Park Delphine in Sector 104, Gurugram by Central Park is a premium residential project offering studio, 3BHK, 4BHK. Starting price 1176Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Central Park Delphine, Sector 104, Gurugram, residential projects, Dwarka Expressway, Central Park, studio, 3BHK, 4BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -24405,10 +24419,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "HCBS Twin Horizon in Sector 102, Gurugram | Price, Floor Plan & Brochure",
+   "description": "HCBS Twin Horizon in Sector 102, Gurugram by HCBS is a premium residential project offering 3BHK, 4BHK. Starting price 4.70cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "HCBS Twin Horizon, Sector 102, Gurugram, residential projects, Dwarka Expressway, HCBS, 3BHK, 4BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -24572,10 +24587,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Signature Sarvam in Sector 37D, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Signature Sarvam in Sector 37D, Gurugram by Signature Global is a premium residential project offering 3BHK, 4BHK. Starting price 2.80cr* . Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Signature Sarvam, Sector 37D, Gurugram, residential projects, Dwarka Expressway, Signature Global, 3BHK, 4BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -24715,10 +24731,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "SS Camasa in Sector 90, Gurugram | Price, Floor Plan & Brochure",
+   "description": "SS Camasa in Sector 90, Gurugram by SS Group is a premium residential project offering 4BHK. Starting price 3.81cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "SS Camasa, Sector 90, Gurugram, residential projects, Dwarka Expressway, SS Group, 4BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -24889,10 +24906,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Ashiana Aaroham in Sector 80, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Ashiana Aaroham in Sector 80, Gurugram by Ashiana Housing is a premium residential project offering 3BHK, 4BHK. Starting price 3.19Cr* Onwards. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Ashiana Aaroham, Sector 80, Gurugram, residential projects, Dwarka Expressway, Ashiana Housing, 3BHK, 4BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -25038,10 +25056,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Landmark Skyvue in Sector 103, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Landmark Skyvue in Sector 103, Gurugram by Landmark Group is a premium residential project offering 3,4..5 BHK Apartment. Starting price 4.99Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Landmark Skyvue, Sector 103, Gurugram, residential projects, Dwarka Expressway, Landmark Group, 3,4..5 BHK Apartment Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -25219,10 +25238,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "noindex, nofollow"
+   "title": "Bestech Altura in Nh8, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Bestech Altura in Nh8, Gurugram by Bestech Group is a premium residential project offering 3BHK, 4BHK. Starting price 2.98Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Bestech Altura, Nh8, Gurugram, residential projects, Dwarka Expressway, Bestech Group, 3BHK, 4BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -25348,10 +25368,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Ganga Kashi in Dwarka Expressway, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Ganga Kashi in Dwarka Expressway, Gurugram by Ganga Realty is a premium residential project offering 3BHK+SQ. Starting price 2.50Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Ganga Kashi, Dwarka Expressway, Gurugram, residential projects, Dwarka Expressway, Ganga Realty, 3BHK+SQ Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -25463,10 +25484,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "DLF Garden City Enclave in Dwarka Expressway, Gurugram | Price, Floor Plan & Brochure",
+   "description": "DLF Garden City Enclave in Dwarka Expressway, Gurugram by DLF Ltd. is a premium residential project offering 3BHK. Starting price 1.90Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "DLF Garden City Enclave, Dwarka Expressway, Gurugram, residential projects, Dwarka Expressway, DLF Ltd., 3BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -25598,10 +25620,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "M3M Soulitude in Dwarka Expressway, Gurugram | Price, Floor Plan & Brochure",
+   "description": "M3M Soulitude in Dwarka Expressway, Gurugram by M3M India is a premium residential project offering 2.5, 3.5BHK. Starting price 1.35Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "M3M Soulitude, Dwarka Expressway, Gurugram, residential projects, Dwarka Expressway, M3M India, 2.5, 3.5BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -25791,10 +25814,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "M3M Forestia West in Dwarka Expressway, Gurugram | Price, Floor Plan & Brochure",
+   "description": "M3M Forestia West in Dwarka Expressway, Gurugram by M3M India is a premium residential project offering 3BHK. Starting price 2.38cr* Onwards. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "M3M Forestia West, Dwarka Expressway, Gurugram, residential projects, Dwarka Expressway, M3M India, 3BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -25946,10 +25970,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Smartworld Nature's Court in Dwarka Expressway, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Smartworld Nature's Court in Dwarka Expressway, Gurugram by Smart world  is a premium residential project offering 1.5BHK, 2.5BHK. Starting price 1.28Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Smartworld Nature's Court, Dwarka Expressway, Gurugram, residential projects, Dwarka Expressway, Smart world , 1.5BHK, 2.5BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -26093,10 +26118,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "SOBHA STRADA in Sector 106, Gurugram | Price, Floor Plan & Brochure",
+   "description": "SOBHA STRADA in Sector 106, Gurugram by Sobha is a premium residential project offering 1BHK. Starting price 2.04Cr* Onwards. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "SOBHA STRADA, Sector 106, Gurugram, residential projects, Dwarka Expressway, Sobha, 1BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -26219,10 +26245,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Trehan Iris Omara in Sector 80, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Trehan Iris Omara in Sector 80, Gurugram by Trehan Iris is a premium residential project offering 3BHK, 4BHK. Starting price on rrequest. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Trehan Iris Omara, Sector 80, Gurugram, residential projects, Dwarka Expressway, Trehan Iris, 3BHK, 4BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -26370,10 +26397,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Adani The Marq in Sector 102A, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Adani The Marq in Sector 102A, Gurugram by Adani Realty is a premium residential project offering 3BHK, 4BHK. Starting price 4.04Cr* Onwards. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Adani The Marq, Sector 102A, Gurugram, residential projects, Dwarka Expressway, Adani Realty, 3BHK, 4BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -26494,10 +26522,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "The Rising Palm Floors in Sector 95A, Gurugram | Price, Floor Plan & Brochure",
+   "description": "The Rising Palm Floors in Sector 95A, Gurugram by Realone Homestates is a premium residential project offering 2.5, 3.5BHK. Starting price 1.18Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "The Rising Palm Floors, Sector 95A, Gurugram, residential projects, Dwarka Expressway, Realone Homestates, 2.5, 3.5BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -26627,10 +26656,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "MRG Crown in Sector 106, Gurugram | Price, Floor Plan & Brochure",
+   "description": "MRG Crown in Sector 106, Gurugram by MRG Group India is a premium residential project offering 3BHK. Starting price 1.90Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "MRG Crown, Sector 106, Gurugram, residential projects, Dwarka Expressway, MRG Group India, 3BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
@@ -26748,10 +26778,11 @@
    }
   ],
   "seo": {
-   "title": "",
-   "description": "",
-   "keywords": "",
-   "robots": "index, follow"
+   "title": "Eldeco Terra & Sol in Sector 80, Gurugram | Price, Floor Plan & Brochure",
+   "description": "Eldeco Terra & Sol in Sector 80, Gurugram by Eldeco Infrastructure & Properties Ltd. is a premium residential project offering 3BHK, 4BHK. Starting price 2.90Cr*. Check floor plans, amenities, brochure and RERA details on Dwarka Expressway Projects.",
+   "keywords": "Eldeco Terra & Sol, Sector 80, Gurugram, residential projects, Dwarka Expressway, Eldeco Infrastructure & Properties Ltd., 3BHK, 4BHK Gurugram",
+   "robots": "index, follow",
+   "og_image": ""
   },
   "geo_location": {
    "type": null,
