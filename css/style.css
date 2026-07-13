@@ -182,6 +182,9 @@ html,body{max-width:100%;overflow-x:hidden}
 .trust-item{display:flex;align-items:center;gap:14px;justify-content:center;padding:0 18px;position:relative}
 .trust-item:not(:last-child)::after{content:'';position:absolute;right:0;top:10%;height:80%;width:1px;background:rgba(255,255,255,.12)}
 .trust-ico{display:inline-flex;width:54px;height:54px;flex:0 0 54px;align-items:center;justify-content:center;border:2px solid var(--accent);border-radius:50%;color:var(--accent);font-size:22px}
+.trust-3d{border:none;width:58px;height:58px;flex:0 0 58px}
+.trust-3d img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 12px rgba(0,0,0,.22));transition:transform .3s}
+.trust-item:hover .trust-3d img{transform:translateY(-3px) rotate(-4deg)}
 .trust-item b{color:#fff;font-size:14.5px;display:block}
 .trust-item span{font-size:12px;color:#9fc3b4}
 /* bottom bar */
