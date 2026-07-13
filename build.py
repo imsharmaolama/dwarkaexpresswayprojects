@@ -215,8 +215,6 @@ MEGA = f"""
       <div class="mega-col"><h5><i class="fas fa-award"></i> Featured Properties</h5>__FEATURED__</div>
     </div></div></div>
   </li>
-  <li><a href="best-deals.html">Resources</a></li>
-  <li><a href="contact.html">About</a></li>
   <li><a href="contact.html">Contact</a></li>
 </nav>"""
 
@@ -285,10 +283,21 @@ def build_mega():
         "microtekinfra.html":"Microtek","assotech.html":"Assotech","landmark.html":"Landmark","vatika-properties.html":"Vatika"
     }
     dev_items = list(dev_map.items())
-    dev_a = "".join(f'<li><a href="{page_file(s)}"><i class="fas fa-building"></i> {n}</a></li>' for s,n in dev_items[:5])
-    dev_b = "".join(f'<li><a href="{page_file(s)}"><i class="fas fa-building"></i> {n}</a></li>' for s,n in dev_items[5:10])
-    dev_c = "".join(f'<li><a href="{page_file(s)}"><i class="fas fa-building"></i> {n}</a></li>' for s,n in dev_items[10:13])
-    dev_d = "".join(f'<li><a href="{page_file(s)}"><i class="fas fa-building"></i> {n}</a></li>' for s,n in dev_items[13:])
+    def dev_li(s,n):
+        base=s[:s.rfind('.html')]
+        img=None
+        for ext in ('.png','.ico','.jpg'):
+            if os.path.exists(os.path.join(ROOT,'assets','devlogos',base+ext)):
+                img=base+ext; break
+        if img:
+            return (f'<li><a href="{page_file(s)}"><img class="dev-logo" '
+                    f'src="assets/devlogos/{img}" alt="{esc(n)} logo" loading="lazy"> '
+                    f'<span>{esc(n)}</span></a></li>')
+        return f'<li><a href="{page_file(s)}"><i class="fas fa-building"></i> {esc(n)}</a></li>'
+    dev_a = "".join(dev_li(s,n) for s,n in dev_items[:5])
+    dev_b = "".join(dev_li(s,n) for s,n in dev_items[5:10])
+    dev_c = "".join(dev_li(s,n) for s,n in dev_items[10:13])
+    dev_d = "".join(dev_li(s,n) for s,n in dev_items[13:])
     MEGA = (MEGA
         .replace("__FEATURED__", feat_html)
         .replace("__SEC_A__", sec_a).replace("__SEC_B__", sec_b)
@@ -401,22 +410,6 @@ FOOTER = f"""<footer class="site-footer">
           <a href="contact.html"><i class="fas fa-angle-right"></i>Careers</a>
         </div>
       </div>
-    </div>
-    <div class="footer-col"><h5>Connect With Us</h5>
-      <form class="fn-form fn-form--sm" data-newsletter>
-        <span class="fn-ico"><i class="fas fa-envelope"></i></span>
-        <input type="email" name="email" placeholder="Enter your email" required>
-        <button type="submit">Subscribe</button>
-      </form>
-      <p class="fn-follow"><i class="fas fa-hashtag"></i> Follow Us</p>
-      <div class="footer-social">
-        <a href="#" aria-label="facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" aria-label="instagram"><i class="fab fa-instagram"></i></a>
-        <a href="#" aria-label="linkedin"><i class="fab fa-linkedin-in"></i></a>
-        <a href="#" aria-label="twitter"><i class="fab fa-twitter"></i></a>
-        <a href="#" aria-label="youtube"><i class="fab fa-youtube"></i></a>
-      </div>
-      <a class="footer-wa" href="https://wa.me/{WA_NUMBER}" target="_blank"><i class="fab fa-whatsapp"></i> Chat on WhatsApp</a>
     </div>
   </div>
   <div class="trust-bar"><div class="container">
@@ -751,7 +744,7 @@ def build_contact():
   <div>
     <h1 class="best_project_heading">Contact Us</h1>
     <p class="section-sub">Get in touch for the best deals, free site visits and expert advice on Dwarka Expressway properties.</p>
-    <div class="detail-block"><h3>Office</h3><p>7C, Level Ground, Omaxe Gurgaon Mall, Sohna Road, Gurgaon</p>
+    <div class="detail-block"><h3>Office</h3><p>#225, 2nd Floor, ILD Trade Tower, Sohna Rd, Sector 47, Gurugram, Haryana 122018</p>
     <p><a href="tel:{PHONE_FULL}" style="color:var(--primary-color);font-weight:700">{PHONE_FULL}</a> &middot; <a href="https://wa.me/{WA_NUMBER}" target="_blank" style="color:var(--primary-color);font-weight:700"><i class="fab fa-whatsapp"></i> WhatsApp</a></p></div>
   </div>
   <aside><div class="enquiry-card"><h3>Send Enquiry</h3>
