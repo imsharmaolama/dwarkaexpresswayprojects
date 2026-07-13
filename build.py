@@ -25,8 +25,56 @@ def page_file(slug):
     s = re.sub(r'\.(html|php)$', '', s)
     return s + ".html"
 
+# ---- amenity extraction: scrape structured amenities from prose ----
 def esc(s):
     return html.escape(str(s or ""), quote=True)
+
+# keyword (lowercased, matched as word) -> FontAwesome icon
+_AMENITY_MAP = [
+    ("club house","fa-mug-hot"),("clubhouse","fa-mug-hot"),("club","fa-mug-hot"),
+    ("swimming pool","fa-person-swimming"),("pool","fa-person-swimming"),
+    ("gym","fa-dumbbell"),("fitness","fa-dumbbell"),("yoga","fa-spa"),
+    ("spa","fa-spa"),("sauna","fa-spa"),
+    ("park","fa-tree"),("garden","fa-tree"),("landscape","fa-tree"),("green","fa-leaf"),
+    ("play area","fa-child"),("children","fa-child"),("kids","fa-child"),
+    ("sports","fa-baseball"),("tennis","fa-baseball"),("badminton","fa-baseball"),
+    ("basketball","fa-baseball"),("jogging","fa-shoe-prints"),("jog","fa-shoe-prints"),
+    ("cycling","fa-bicycle"),("gymnasium","fa-dumbbell"),
+    ("security","fa-shield-halved"),("cctv","fa-video"),("surveillance","fa-video"),
+    ("parking","fa-car"),("car parking","fa-car"),("ev charging","fa-charging-station"),("ev ","fa-charging-station"),
+    ("lift","fa-arrow-up-from-bracket"),("elevator","fa-arrow-up-from-bracket"),
+    ("power backup","fa-plug"),("power","fa-plug"),("generator","fa-plug"),
+    ("water","fa-faucet"),("rainwater","fa-cloud-rain"),("solar","fa-solar-panel"),
+    ("wifi","fa-wifi"),("intercom","fa-phone-volume"),("fibre","fa-wifi"),
+    ("firefighting","fa-fire-extinguisher"),("fire","fa-fire-extinguisher"),("earthquake","fa-mountain"),
+    ("school","fa-school"),("education","fa-school"),("daycare","fa-school"),
+    ("hospital","fa-hospital"),("health","fa-hospital"),("clinic","fa-hospital"),
+    ("shopping","fa-cart-shopping"),("mall","fa-cart-shopping"),("retail","fa-cart-shopping"),
+    ("restaurant","fa-utensils"),("cafeteria","fa-utensils"),("cafe","fa-utensils"),
+    ("bank","fa-building-columns"),("atm","fa-money-bill"),
+    ("temple","fa-place-of-worship"),("mosque","fa-place-of-worship"),("church","fa-place-of-worship"),
+    ("library","fa-book-open"),("banquet","fa-champagne-glasses"),("party","fa-champagne-glasses"),
+    ("amphitheatre","fa-masks-theater"),("theatre","fa-masks-theater"),("community","fa-people-group"),
+    ("senior","fa-people-roof"),("senior citizen","fa-people-roof"),
+    ("strolling","fa-person-walking"),("walkway","fa-person-walking"),("footpath","fa-person-walking"),
+    ("pavilion","fa-umbrella-beach"),("fountain","fa-water"),("zap","fa-bolt"),
+]
+import re as _re
+_AMEN_WORD = _re.compile(r"\b(" + "|".join(re.escape(k.split()[0]) for k,_ in _AMENITY_MAP) + r")\w*", _re.I)
+def extract_amenities(p):
+    blob = " ".join(str(p.get(k,"")) for k in ("features","highlights","description","short_descrip","advantages","banner_bullets"))
+    found = []
+    seen_kw = set()
+    for kw, icon in _AMENITY_MAP:
+        if _re.search(r"\b" + _re.escape(kw) + r"\b", blob, _re.I):
+            # canonical key: strip redundant prefixes so "swimming pool"/"car parking" collapse to "pool"/"parking"
+            canon = kw.lower().replace("swimming ","").replace("car ","").strip()
+            if canon in seen_kw:
+                continue
+            seen_kw.add(canon)
+            label = kw.title() if " " in kw else kw.capitalize()
+            found.append((label, icon))
+    return found  # list of (label, icon)
 
 _ICON_MAP = [
     ("density", "fa-layer-group"), ("coverage", "fa-compress"), ("open area", "fa-tree"),
@@ -604,9 +652,12 @@ def build_detail(p):
         size = f"{pl.get('size','')} {pl.get('size_sq','')}".strip()
         rows += f"<tr><td>{esc(cat or 'N/A')}</td><td>{esc(size)}</td><td>{esc(pl.get('price') or 'Call for Price')}</td></tr>"
     price_table = f'<table class="price-table"><tr><th>Configuration</th><th>Size</th><th>Price</th></tr>{rows}</table>' if rows else f'<p>Starting Price: <b>{esc(price)}</b></p>'
-    # amenities
-    ams = p.get("amenties") or []
-    amen = "".join(f"<span>{esc(a.get('name'))}</span>" for a in ams) or "<span>Amenities available on request</span>"
+    # amenities — extract structured list from prose (scrape has no amenties array)
+    ams = extract_amenities(p)
+    if ams:
+        amen = "".join(f'<span class="amen-chip"><i class="fas {icon}"></i>{esc(label)}</span>' for label, icon in ams)
+    else:
+        amen = '<span class="amen-chip amen-empty"><i class="fas fa-info-circle"></i>Amenities available on request</span>'
     # description / highlights / advantages
     desc = p.get("description") or p.get("short_descrip") or ""
     highlights = clean_rich(p.get("highlights") or "")

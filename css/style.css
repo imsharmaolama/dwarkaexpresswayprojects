@@ -247,7 +247,12 @@ html,body{max-width:100%;overflow-x:hidden}
 .price-table th,.price-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;font-size:14px}
 .price-table th{background:var(--bg-soft);color:var(--heading)}
 .amenity-chips{display:flex;flex-wrap:wrap;gap:10px}
-.amenity-chips span{background:var(--light-blue);color:var(--heading);padding:7px 14px;border-radius:20px;font-size:13px;font-weight:600}
+.amen-chip{display:inline-flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--primary-color);padding:8px 14px;border-radius:22px;font-size:13px;font-weight:600;transition:.15s}
+.amen-chip i{font-size:14px;color:var(--primary-color)}
+.amen-chip:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+.amen-chip:hover i{color:#fff}
+.amen-empty{background:var(--bg-soft);color:var(--text-muted);font-weight:500;font-style:italic}
+.amen-empty i{color:var(--text-muted)}
 .enquiry-card{position:sticky;top:calc(var(--header-h) + 14px);background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
 .enquiry-card h3{font-size:19px;margin-bottom:14px}
 .form-field{margin-bottom:12px}
