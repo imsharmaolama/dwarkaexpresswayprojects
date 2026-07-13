@@ -160,7 +160,7 @@ html,body{max-width:100%;overflow-x:hidden}
 .footer-col a i.fa-angle-right{color:var(--accent);font-size:12px;transition:.15s}
 .footer-col a:hover{color:#fff;padding-left:4px}
 .footer-col a:hover i.fa-angle-right{padding-left:3px}
-.footer-sub2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+
 /* brand column */
 .footer-logo{height:62px;width:auto;margin-bottom:16px;display:block}
 .footer-brand-desc{font-size:13.5px;line-height:1.7;color:#bfd9cf;margin-bottom:16px}
@@ -334,7 +334,6 @@ html,body{max-width:100%;overflow-x:hidden}
   .footer-brand-desc{max-width:340px;margin-left:auto;margin-right:auto}
   .footer-contact{display:inline-block;text-align:left}
   .footer-contact li{justify-content:flex-start}
-  .footer-sub2{grid-template-columns:1fr;max-width:220px;margin:0 auto}
   .footer-col a{justify-content:center}
   .footer-social{justify-content:center}
   .footer-wa{justify-content:center;display:inline-flex}
