@@ -581,6 +581,15 @@ def build_index():
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dwarka Expressway Projects - {len(PROJECTS)}+ Real Estate / Property for sale on Dwarka Expressway</title>
 <meta name="description" content="Explore {len(PROJECTS)}+ residential & commercial projects on Dwarka Expressway, Gurgaon. New Launch, Ready to Move, SCO Plots & Affordable Housing with RERA approved listings.">
+<link rel="canonical" href="{SITE}/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dwarka Expressway Projects">
+<meta property="og:title" content="Dwarka Expressway Projects - Premium Homes on Dwarka Expressway, Gurgaon">
+<meta property="og:description" content="176+ verified residential & commercial projects on Dwarka Expressway, Gurgaon. RERA approved, prices, floor plans & amenities.">
+<meta property="og:url" content="{SITE}/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dwarka Expressway Projects">
+<meta name="twitter:description" content="176+ verified projects on Dwarka Expressway, Gurgaon.">
 <link rel="stylesheet" href="css/style.css">
 </head><body>
 {header()}
@@ -622,6 +631,15 @@ def build_listing(slug, title, plist, blurb="", is_home_route=False):
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(h1)}</title>
 <meta name="description" content="{esc(meta_desc)}">
+<link rel="canonical" href="{SITE}/{slug}.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dwarka Expressway Projects">
+<meta property="og:title" content="{esc(h1)}">
+<meta property="og:description" content="{esc(meta_desc)}">
+<meta property="og:url" content="{SITE}/{slug}.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{esc(h1)}">
+<meta name="twitter:description" content="{esc(meta_desc)}">
 <link rel="stylesheet" href="css/style.css">
 </head><body>
 {header()}
@@ -698,16 +716,44 @@ def build_detail(p):
     seo_keys = seo.get('keywords') or ""
     seo_robots = seo.get('robots') or "index, follow"
     seo_og = seo.get('og_image') or (first_img(p) if 'first_img' in dir() else "")
+    canonical = f"{SITE}/projects/{esc(slug_file(p.get('slug') or ''))}.html"
+    og_url = canonical
+    # JSON-LD structured data (RealEstateListing / Apartment)
+    price_num = re.sub(r'[^0-9.]', '', str(p.get('starting_price') or ''))
+    ld = {
+        "@context": "https://schema.org",
+        "@type": "Residence",
+        "name": p['name'],
+        "url": og_url,
+        "image": [im.get('image', {}) or {} for im in (p.get('images') or []) if (im.get('image') or {}).get('s3_link')][:10],
+        "description": seo_desc,
+        "numberOfRooms": (p.get('configuration') or '').replace('BHK', '') or None,
+        "address": {"@type": "PostalAddress", "addressLocality": "Gurugram", "addressRegion": "Haryana", "addressCountry": "IN",
+                    "streetAddress": (p.get('location') or {}).get('address') or ""},
+        "offers": {"@type": "Offer", "priceCurrency": "INR",
+                   "price": price_num if price_num else None,
+                   "availability": "https://schema.org/InStock"},
+    }
+    if bname: ld["developer"] = {"@type": "Organization", "name": bname}
+    json_ld = "<script type=\"application/ld+json\">" + json.dumps(ld, ensure_ascii=False) + "</script>"
     html_doc = f"""<!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(seo_title)}</title>
 <meta name="description" content="{esc(seo_desc)}">
 <meta name="keywords" content="{esc(seo_keys)}">
 <meta name="robots" content="{esc(seo_robots)}">
+<link rel="canonical" href="{canonical}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dwarka Expressway Projects">
 <meta property="og:title" content="{esc(seo_title)}">
 <meta property="og:description" content="{esc(seo_desc)}">
 <meta property="og:image" content="{esc(seo_og)}">
-<meta property="og:type" content="website">
+<meta property="og:url" content="{og_url}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{esc(seo_title)}">
+<meta name="twitter:description" content="{esc(seo_desc)}">
+<meta name="twitter:image" content="{esc(seo_og)}">
+{json_ld}
 <link rel="stylesheet" href="../css/style.css">
 </head><body>
 {header_d(1)}
@@ -760,6 +806,44 @@ def build_detail(p):
     open(os.path.join(d, f"{slug_file(slug)}.html"), "w", encoding="utf-8").write(html_doc)
 
 # ---------- build all ----------
+def build_sitemap():
+    """Generate sitemap.xml + robots.txt for the production domain (SITE)."""
+    urls = [f"{SITE}/", f"{SITE}/contact.html", f"{SITE}/privacy-policy.html"]
+    # listing / category pages
+    listing_slugs = ["residential-projects-gurgaon","commercial-projects-gurgaon","affordable-housing-projects",
+        "sco-plots-gurgaon","upcoming-projects","ready-to-move-flats-in-dwarka-expressway-gurgaon",
+        "best-deals","projects-list","luxury-projects","buy-plots"]
+    for s in listing_slugs:
+        urls.append(f"{SITE}/{s}.html")
+    # all landing pages referenced by the menu + guaranteed
+    for slug in ALLURLS:
+        if slug.endswith(".php"):
+            slug = slug[:-4] + ".html"
+        urls.append(f"{SITE}/{slug}")
+    for slug in ["2bhk-apartment-on-dwarka-expressway.html","3bhk-apartment-on-dwarka-expressway.html",
+        "4bhk-apartment-on-dwarka-expressway.html","5bhk-apartment-on-dwarka-expressway.html",
+        "property-1cr-1.5cr-on-dwarka-expressway.html","property-2cr-3cr-on-dwarka-expressway.html",
+        "vatika-properties.html","dlf-properties.html","signature-global-gurgaon.html","godrej-properties.html",
+        "tata-projects-on-dwarka-expressway.html","sobhadevelopers.html","ats-projects-in-gurgaon.html",
+        "m3m-projects-gurgaon.html","emaar-properties.html","bestech-projects-on-dwarka-expressway.html",
+        "experion-developers.html","ansalhousing.html","puriconstructions.html","alphagcorp.html","ssgroup.html",
+        "microtekinfra.html","assotech.html","landmark.html",
+        "projects-in-sector-81-gurgaon.html","projects-in-sector-91-gurgaon.html",
+        "projects-in-sector-102-gurgaon.html","projects-in-sector-111-gurgaon.html"]:
+        urls.append(f"{SITE}/{slug}")
+    # detail pages
+    for p in PROJECTS:
+        urls.append(f"{SITE}/projects/{slug_file(p.get('slug') or '')}.html")
+    urls = sorted(set(urls))
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for u in urls:
+        xml += f"  <url><loc>{esc(u)}</loc></url>\n"
+    xml += "</urlset>\n"
+    open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8").write(xml)
+    robots = (f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
+    open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8").write(robots)
+    return len(urls)
+
 def main():
     build_index()
     # core routes
@@ -807,12 +891,19 @@ def main():
     # detail pages
     for p in PROJECTS:
         build_detail(p)
-    print("Built index + category pages +", len(ALLURLS)-len(core), "landing pages +", len(PROJECTS), "detail pages")
+    n = build_sitemap()
+    print(f"Built index + category pages + {len(ALLURLS)-len(core)} landing pages + {len(PROJECTS)} detail pages + sitemap.xml ({n} urls) + robots.txt")
 
 def build_contact():
     html_doc = f"""<!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Contact Us - Dwarka Expressway Projects</title>
+<link rel="canonical" href="{SITE}/contact.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dwarka Expressway Projects">
+<meta property="og:title" content="Contact Us - Dwarka Expressway Projects">
+<meta property="og:url" content="{SITE}/contact.html">
+<meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="css/style.css"></head><body>
 {header()}
 <div class="breadcrumb"><div class="container"><a href="index.html">Home</a> / Contact</div></div>
@@ -841,6 +932,8 @@ def build_privacy():
     html_doc = f"""<!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dwarka Expressway Privacy Policy</title>
+<link rel="canonical" href="{SITE}/privacy-policy.html">
+<meta name="robots" content="noindex, follow">
 <link rel="stylesheet" href="css/style.css"></head><body>
 {header()}
 <div class="policy_main">
@@ -951,6 +1044,15 @@ def build_landing(slug):
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(meta_desc)}">
+<link rel="canonical" href="{SITE}/{slug}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dwarka Expressway Projects">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="{esc(meta_desc)}">
+<meta property="og:url" content="{SITE}/{slug}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{esc(title)}">
+<meta name="twitter:description" content="{esc(meta_desc)}">
 <link rel="stylesheet" href="css/style.css"></head><body>
 {header()}
 <div class="breadcrumb"><div class="container"><a href="index.html">Home</a> / {esc(title)}</div></div>
