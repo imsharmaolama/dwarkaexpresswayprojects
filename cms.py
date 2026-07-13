@@ -161,6 +161,42 @@ class H(BaseHTTPRequestHandler):
             projs = [x for x in load_projects() if x.get("slug") != slug]
             save_projects(projs)
             self._send(200, {"ok": True, "remaining": len(projs)})
+        elif path == "/api/project/image/add":
+            projs = load_projects()
+            slug = data.get("slug")
+            p = next((x for x in projs if x.get("slug") == slug), None)
+            if not p:
+                self._send(404, {"error": "project not found"}); return
+            url = data.get("url", "")
+            name = data.get("name") or url.rsplit("/", 1)[-1]
+            img = {"name": name, "alt": data.get("alt", name), "image": {"s3_link": url}}
+            p.setdefault("images", []).append(img)
+            save_projects(projs)
+            self._send(200, {"ok": True, "count": len(p["images"])})
+        elif path == "/api/project/image/delete":
+            projs = load_projects()
+            slug = data.get("slug"); idx = data.get("index")
+            p = next((x for x in projs if x.get("slug") == slug), None)
+            if not p or "images" not in p:
+                self._send(404, {"error": "not found"}); return
+            try:
+                p["images"].pop(int(idx))
+            except Exception:
+                pass
+            save_projects(projs)
+            self._send(200, {"ok": True, "count": len(p["images"])})
+        elif path == "/api/project/images/reorder":
+            projs = load_projects()
+            slug = data.get("slug"); order = data.get("order", [])
+            p = next((x for x in projs if x.get("slug") == slug), None)
+            if not p or "images" not in p:
+                self._send(404, {"error": "not found"}); return
+            try:
+                p["images"] = [p["images"][i] for i in order if 0 <= i < len(p["images"])]
+            except Exception:
+                pass
+            save_projects(projs)
+            self._send(200, {"ok": True, "count": len(p["images"])})
         elif path == "/api/cms/save":
             save_cms(data)
             self._send(200, {"ok": True})

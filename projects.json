@@ -98,13 +98,6 @@
     "image": {
      "s3_link": "https://dwarkaexpressway-bucket.s3.ap-south-1.amazonaws.com/images/2a0a4a2fd3a2ecddf22da78f8cf74c.jpeg"
     }
-   },
-   {
-    "name": "Krisumi Waterfall Residences 5.jpg",
-    "alt": "Krisumi Waterfall Residences 5.jpg",
-    "image": {
-     "s3_link": "https://dwarkaexpressway-bucket.s3.ap-south-1.amazonaws.com/images/043d8f9759a6fb0b7ab994c9770512.jpg"
-    }
    }
   ],
   "master_plan": {
@@ -212,12 +205,7 @@
     ]
    }
   ],
-  "seo": {
-   "title": "Krisumi Waterfall Residences | Price, Floor Plan and Brochure",
-   "description": "Krisumi Waterfall Residences Sector 36A, Gurgaon is another well-executed project. View project details & price. Check the Brochure PDF, Floor Plan, Rent & Master Plan.\n",
-   "keywords": "Krisumi Waterfall Residences Sector 36A gurgaon,Krisumi Waterfall Residences, Krisumi City Waterfall Residences, Krisumi Waterfall Residences Gurgaon, Waterfall Residences, Krisumi Waterfall",
-   "robots": "index, follow"
-  },
+  "seo": {},
   "geo_location": {
    "type": null,
    "coordinates": null

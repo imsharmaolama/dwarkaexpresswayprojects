@@ -692,10 +692,22 @@ def build_detail(p):
     if mp: downloads += f'<button class="download-btn lead-gate" data-url="{esc(mp)}" data-label="Master Plan" data-enquire="{esc(p["name"])}">Download Master Plan</button> '
     if brochure: downloads += f'<button class="download-btn lead-gate" data-url="{esc(brochure)}" data-label="Brochure" data-enquire="{esc(p["name"])}">Download Brochure</button>'
 
+    seo = p.get('seo') or {}
+    seo_title = seo.get('title') or f"{p['name']} | Price, Floor Plan & Brochure"
+    seo_desc = (seo.get('description') or desc or p['name'])[:300]
+    seo_keys = seo.get('keywords') or ""
+    seo_robots = seo.get('robots') or "index, follow"
+    seo_og = seo.get('og_image') or (first_img(p) if 'first_img' in dir() else "")
     html_doc = f"""<!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{esc((p.get('seo') or {}).get('title') or f"{p['name']} | Price, Floor Plan & Brochure")}</title>
-<meta name="description" content="{esc(((p.get('seo') or {}).get('description') or desc or p['name'])[:300])}">
+<title>{esc(seo_title)}</title>
+<meta name="description" content="{esc(seo_desc)}">
+<meta name="keywords" content="{esc(seo_keys)}">
+<meta name="robots" content="{esc(seo_robots)}">
+<meta property="og:title" content="{esc(seo_title)}">
+<meta property="og:description" content="{esc(seo_desc)}">
+<meta property="og:image" content="{esc(seo_og)}">
+<meta property="og:type" content="website">
 <link rel="stylesheet" href="../css/style.css">
 </head><body>
 {header_d(1)}
