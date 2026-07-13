@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEP CMS — Admin</title>
+<style>
+  :root{--g:#0d5c46;--lime:#7bc043;--g2:#094a3b;--bg:#f4f7f6;--bd:#e2e8e6;--mut:#6b7d78}
+  *{box-sizing:border-box}
+  body{margin:0;font:14px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:#1c2b27}
+  a{color:var(--g)}
+  header{background:var(--g);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10}
+  header b{font-size:16px;letter-spacing:.5px}
+  header .sp{flex:1}
+  .btn{background:var(--lime);color:#06281e;border:none;padding:8px 14px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px}
+  .btn:hover{filter:brightness(1.05)}
+  .btn.ghost{background:#fff;color:var(--g);border:1px solid var(--bd)}
+  .btn.danger{background:#e2522f;color:#fff}
+  .btn.sm{padding:4px 9px;font-size:12px;border-radius:6px}
+  .wrap{display:flex;min-height:calc(100vh - 52px)}
+  nav.side{width:210px;background:#fff;border-right:1px solid var(--bd);padding:14px 10px}
+  nav.side a{display:block;padding:9px 12px;border-radius:8px;color:#26403a;text-decoration:none;margin-bottom:3px;cursor:pointer;font-weight:600}
+  nav.side a:hover{background:var(--bg)}
+  nav.side a.active{background:var(--g);color:#fff}
+  main{flex:1;padding:20px;overflow:auto}
+  .card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:16px}
+  .card h3{margin:0 0 14px;font-size:15px}
+  input,textarea,select{width:100%;padding:9px 10px;border:1px solid var(--bd);border-radius:8px;font:inherit;margin-bottom:10px;background:#fff}
+  textarea{resize:vertical;min-height:90px}
+  label{font-weight:600;color:#334;display:block;margin:8px 0 2px;font-size:12.5px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--bd);font-size:13px}
+  th{color:var(--mut);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
+  tr:hover td{background:#fafcfb}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;background:#eaf3ef;color:var(--g)}
+  .pill.c{background:#fdeee9;color:#b5502a}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .login{max-width:340px;margin:14vh auto;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:28px}
+  .login h2{margin:0 0 16px;color:var(--g)}
+  .dev-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .dev-row input{flex:1;margin:0}
+  .dev-row input.s{width:130px;flex:none}
+  .muted{color:var(--mut);font-size:12.5px}
+  #toast{position:fixed;bottom:20px;right:20px;background:#06281e;color:#fff;padding:12px 18px;border-radius:10px;opacity:0;transition:.25s;z-index:99;font-weight:600}
+  #toast.show{opacity:1}
+  .pub-log{background:#0e1f1a;color:#bdf0d8;font:12px/1.5 ui-monospace,Menlo,monospace;padding:12px;border-radius:10px;white-space:pre-wrap;max-height:240px;overflow:auto;margin-top:10px}
+  .hidden{display:none}
+  img.thumb{width:46px;height:34px;object-fit:cover;border-radius:5px;border:1px solid var(--bd)}
+</style>
+</head>
+<body>
+<header id="topbar" class="hidden">
+  <b>DWARKA EXPRESSWAY · CMS</b>
+  <span class="sp"></span>
+  <button class="btn ghost sm" onclick="publish()">⤴ Publish to Live</button>
+  <button class="btn ghost sm" onclick="logout()">Logout</button>
+</header>
+
+<div id="login" class="login">
+  <h2>CMS Login</h2>
+  <label>Password</label>
+  <input id="pw" type="password" placeholder="cms123" onkeydown="if(event.key==='Enter')doLogin()">
+  <button class="btn" style="width:100%;margin-top:8px" onclick="doLogin()">Sign in</button>
+  <p class="muted" style="margin-top:12px">Local-only. Publishing runs build.py + git push → Vercel auto-deploys.</p>
+</div>
+
+<div class="wrap hidden" id="app">
+  <nav class="side">
+    <a class="active" data-tab="projects" onclick="tab(this)">Projects</a>
+    <a data-tab="developers" onclick="tab(this)">Developers</a>
+    <a data-tab="settings" onclick="tab(this)">Site Settings</a>
+    <a data-tab="media" onclick="tab(this)">Media / Uploads</a>
+  </nav>
+  <main id="main"></main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const API = (p,qs={})=> '/api/'+p+'?'+new URLSearchParams(Object.assign({token:TOKEN},qs));
+let TOKEN = localStorage.getItem('dep_token')||'';
+let CACHE = {projects:[], cms:null};
+
+function toast(m,ok=true){const t=document.getElementById('toast');t.textContent=m;t.style.background=ok?'#06281e':'#b5502a';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+async function doLogin(){const pw=document.getElementById('pw').value;const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pw})});const j=await r.json();if(j.token){TOKEN=j.token;localStorage.setItem('dep_token',TOKEN);enter()}else toast('Wrong password',false)}
+function logout(){TOKEN='';localStorage.removeItem('dep_token');location.reload()}
+function enter(){document.getElementById('login').classList.add('hidden');document.getElementById('topbar').classList.remove('hidden');document.getElementById('app').classList.remove('hidden');loadAll();renderProjects()}
+
+async function loadAll(){const [a,b]=await Promise.all([fetch(API('projects')).then(r=>r.json()),fetch(API('cms')).then(r=>r.json())]);CACHE.projects=a;CACHE.cms=b}
+
+function tab(el){document.querySelectorAll('nav.side a').forEach(x=>x.classList.remove('active'));el.classList.add('active');const t=el.dataset.tab;({projects:renderProjects,developers:renderDevs,settings:renderSettings,media:renderMedia}[t]())}
+
+function renderProjects(){const rows=CACHE.projects.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.builder)}</td><td>${esc(p.type)}</td><td><span class="pill ${p.status==='Under Construction'?'c':''}">${esc(p.status)}</span></td><td>${esc(p.price)}</td><td>${p.slug}</td><td><button class="btn sm" onclick="editProject('${p.slug}')">Edit</button></td></tr>`).join('');document.getElementById('main').innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><h3>Projects (${CACHE.projects.length})</h3><span class="muted">Click Edit to modify. Save commits to projects.json (Publish pushes live).</span></div><div style="max-height:62vh;overflow:auto"><table><thead><tr><th>Name</th><th>Builder</th><th>Type</th><th>Status</th><th>Price</th><th>Slug</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`}
+
+async function editProject(slug){const p=await fetch(API('project',{slug})).then(r=>r.json());const b=(p.builder&&p.builder[0])||{};const imgs=(p.images||[]).map(i=>i.image&&i.image.s3_link).filter(Boolean);document.getElementById('main').innerHTML=`<form class="card" id="pf" onsubmit="saveProject(event)">
+<h3>Edit — ${esc(p.name)}</h3>
+<div class="grid">
+<div><label>Name</label><input name="name" value="${esc(p.name||'')}"></div>
+<div><label>Slug</label><input name="slug" value="${esc(p.slug||'')}"></div>
+<div><label>Builder name</label><input name="builder" value="${esc(b.name||'')}"></div>
+<div><label>Starting price</label><input name="price" value="${esc(p.starting_price||'')}"></div>
+<div><label>Type</label><select name="type"><option ${p.project_type==='residential'?'selected':''}>residential</option><option ${p.project_type==='commercial'?'selected':''}>commercial</option></select></div>
+<div><label>Status</label><select name="status"><option ${p.project_status==='Ready To Move'?'selected':''}>Ready To Move</option><option ${p.project_status==='Under Construction'?'selected':''}>Under Construction</option><option ${p.project_status==='New Launch'?'selected':''}>New Launch</option></select></div>
+</div>
+<label>Configuration (e.g. 2,3,4 BHK)</label><input name="configuration" value="${esc(p.configuration||'')}">
+<label>Short description</label><textarea name="short">${esc(p.short_descrip||'')}</textarea>
+<label>Tagline</label><input name="tagline" value="${esc(p.tagline||'')}">
+<label>Description (HTML ok)</label><textarea name="description" style="min-height:160px">${esc(p.description||'')}</textarea>
+<div class="row" style="justify-content:space-between;margin-top:10px">
+<button class="btn" type="submit">Save Project</button>
+<button class="btn danger" type="button" onclick="delProject('${esc(p.slug)}')">Delete</button>
+</div></form>`}
+
+async function saveProject(e){e.preventDefault();const f=e.target;const o={};new FormData(f).forEach((v,k)=>o[k]=v);const slug=o.slug;const projs=CACHE.projects;const cur=projs.find(p=>p.slug===slug)||{};cur.name=o.name;cur.slug=o.slug;cur.starting_price=o.price;cur.project_type=o.type;cur.project_status=o.status;cur.configuration=o.configuration;cur.short_descrip=o.short;cur.tagline=o.tagline;cur.description=o.description;if(!cur.builder)cur.builder=[{}];cur.builder[0].name=o.builder;if(!cur.images)cur.images=[];const r=await fetch(API('project/save'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cur)});const j=await r.json();if(j.ok){toast('Saved '+o.name);await loadAll();renderProjects()}else toast('Save failed',false)}
+
+async function delProject(slug){if(!confirm('Delete this project?'))return;const r=await fetch(API('project/delete'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slug})});const j=await r.json();if(j.ok){toast('Deleted');await loadAll();renderProjects()}else toast('Delete failed',false)}
+
+function renderDevs(){const d=CACHE.cms.developers||[];const rows=d.map((x,i)=>`<div class="dev-row"><input value="${esc(x.name)}" data-i="${i}" data-k="name"><input class="s" value="${esc(x.slug)}" data-i="${i}" data-k="slug"><input class="s" value="${esc(x.logo||'')}" data-i="${i}" data-k="logo" placeholder="logo.png"><select class="s" data-i="${i}" data-k="group"><option ${x.group==='top'?'selected':''}>top</option><option ${x.group==='more'?'selected':''}>more</option><option ${x.group==='premium'?'selected':''}>premium</option><option ${x.group==='others'?'selected':''}>others</option></select><button class="btn ghost sm" onclick="rmDev(${i})">✕</button></div>`).join('');document.getElementById('main').innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><h3>Developers (${d.length})</h3><button class="btn sm" onclick="addDev()">+ Add</button></div><p class="muted">group = menu column (top→DEV_A, more→DEV_B, premium→DEV_C, others→DEV_D). logo = file in assets/devlogos/. Save → Publish to go live.</p>${rows}<div style="margin-top:12px"><button class="btn" onclick="saveDevs()">Save Developers</button></div></div>`}
+function addDev(){CACHE.cms.developers.push({name:'New Dev',slug:'new-dev',group:'others',logo:''});renderDevs()}
+function rmDev(i){CACHE.cms.developers.splice(i,1);renderDevs()}
+async function saveDevs(){const r=await fetch(API('cms/save'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(CACHE.cms)});const j=await r.json();if(j.ok)toast('Developers saved');else toast('Save failed',false)}
+
+function renderSettings(){const s=(CACHE.cms.settings||{});document.getElementById('main').innerHTML=`<form class="card" id="sf" onsubmit="saveSettings(event)"><h3>Site Settings</h3><div class="grid">
+<div><label>Phone (digits)</label><input name="phone" value="${esc(s.phone||'')}"></div>
+<div><label>Phone display</label><input name="phone_full" value="${esc(s.phone_full||'')}"></div>
+<div><label>WhatsApp number</label><input name="wa" value="${esc(s.wa||'')}"></div>
+<div><label>Brand</label><input name="brand" value="${esc(s.brand||'')}"></div>
+<div><label>Lead email (private)</label><input name="lead_email" value="${esc(s.lead_email||'')}"></div>
+<div><label>Public email</label><input name="public_email" value="${esc(s.public_email||'')}"></div>
+</div><button class="btn" type="submit" style="margin-top:10px">Save Settings</button></form>`}
+async function saveSettings(e){e.preventDefault();const o={};new FormData(e.target).forEach((v,k)=>o[k]=v);CACHE.cms.settings=o;const r=await fetch(API('cms/save'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(CACHE.cms)});const j=await r.json();if(j.ok)toast('Settings saved');else toast('Save failed',false)}
+
+function renderMedia(){document.getElementById('main').innerHTML=`<div class="card"><h3>Media / Uploads</h3><p class="muted">Upload images to assets/uploads/. Copy the URL into a project's image field or use in content.</p><input type="file" id="up" onchange="upload(this)"><div id="uplist" class="row" style="margin-top:12px"></div></div>`;refreshUploads()}
+async function refreshUploads(){const r=await fetch(API('uploads')).then(r=>r.json());document.getElementById('uplist').innerHTML=r.map(f=>`<div style="text-align:center"><img class="thumb" src="${f.url}"><div class="muted" style="font-size:11px">${esc(f.name)}</div><code style="font-size:10px">${esc(f.url)}</code></div>`).join('')||'<p class="muted">No uploads yet.</p>'}
+async function upload(inp){const fd=new FormData();fd.append('file',inp.files[0]);const r=await fetch(API(''),{method:'POST',body:fd});const j=await r.json();if(j.url){toast('Uploaded '+j.name);refreshUploads()}else toast('Upload failed',false)}
+
+async function publish(){if(!confirm('Publish: run build + git push → Vercel deploy?'))return;const btn=event.target;btn.disabled=true;btn.textContent='Publishing…';const r=await fetch(API('publish')).then(r=>r.json());btn.disabled=false;btn.textContent='⤴ Publish to Live';const box=document.createElement('div');box.className='pub-log';box.textContent=(r.log||[]).join('\n');document.getElementById('main').prepend(box);toast(r.ok?'Published ✔':'Publish failed — see log',r.ok)}
+
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+// bootstrap
+if(TOKEN){fetch(API('projects')).then(r=>r.ok?enter():logout()).catch(logout)}
+</script>
+</body>
+</html>

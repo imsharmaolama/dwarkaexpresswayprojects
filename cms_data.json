@@ -1,0 +1,162 @@
+{
+  "developers": [
+    {
+      "name": "DLF",
+      "slug": "dlf-properties",
+      "group": "top",
+      "logo": "dlf-properties.png"
+    },
+    {
+      "name": "Vatika",
+      "slug": "vatika-properties",
+      "group": "top",
+      "logo": "vatika-properties.png"
+    },
+    {
+      "name": "Signature Global",
+      "slug": "signature-global-gurgaon",
+      "group": "top",
+      "logo": "signature-global-gurgaon.png"
+    },
+    {
+      "name": "Godrej Properties",
+      "slug": "godrej-properties",
+      "group": "top",
+      "logo": "godrej-properties.png"
+    },
+    {
+      "name": "Tata Housing",
+      "slug": "tata-projects-on-dwarka-expressway",
+      "group": "top",
+      "logo": "tata-projects-on-dwarka-expressway.png"
+    },
+    {
+      "name": "Sobha",
+      "slug": "sobhadevelopers",
+      "group": "more",
+      "logo": "sobhadevelopers.png"
+    },
+    {
+      "name": "ATS",
+      "slug": "ats-projects-in-gurgaon",
+      "group": "more",
+      "logo": "ats-projects-in-gurgaon.png"
+    },
+    {
+      "name": "M3M",
+      "slug": "m3m-projects-gurgaon",
+      "group": "more",
+      "logo": "m3m-projects-gurgaon.png"
+    },
+    {
+      "name": "Emaar",
+      "slug": "emaar-properties",
+      "group": "more",
+      "logo": "emaar-properties.png"
+    },
+    {
+      "name": "Adani",
+      "slug": "adani",
+      "group": "more",
+      "logo": "adani.png"
+    },
+    {
+      "name": "Bestech",
+      "slug": "bestech-projects-on-dwarka-expressway",
+      "group": "premium",
+      "logo": "bestech-projects-on-dwarka-expressway.png"
+    },
+    {
+      "name": "Experion",
+      "slug": "experion-developers",
+      "group": "premium",
+      "logo": "experion-developers.png"
+    },
+    {
+      "name": "Ansal Housing",
+      "slug": "ansalhousing",
+      "group": "premium",
+      "logo": "ansalhousing.png"
+    },
+    {
+      "name": "Puri",
+      "slug": "puriconstructions",
+      "group": "others",
+      "logo": "puriconstructions.png"
+    },
+    {
+      "name": "Alpha G Corp",
+      "slug": "alphagcorp",
+      "group": "others",
+      "logo": "alphagcorp.png"
+    },
+    {
+      "name": "SS Group",
+      "slug": "ssgroup",
+      "group": "others",
+      "logo": "ssgroup.png"
+    },
+    {
+      "name": "Microtek",
+      "slug": "microtekinfra",
+      "group": "others",
+      "logo": "microtekinfra.png"
+    },
+    {
+      "name": "Assotech",
+      "slug": "assotech",
+      "group": "others",
+      "logo": "assotech.png"
+    },
+    {
+      "name": "Landmark",
+      "slug": "landmark",
+      "group": "others",
+      "logo": "landmark.png"
+    }
+  ],
+  "settings": {
+    "phone": "9015883288",
+    "phone_full": "+919****3288",
+    "wa": "919015883288",
+    "lead_email": "sharma.manish53@gmail.com",
+    "public_email": "info@dwarkaexpresswayprojects.in",
+    "brand": "Dwarka Expressway Projects"
+  },
+  "sector_groups": [
+    {
+      "title": "Sectors 81-90",
+      "from": 81,
+      "to": 90
+    },
+    {
+      "title": "Sectors 91-100",
+      "from": 91,
+      "to": 100
+    },
+    {
+      "title": "Sectors 101-110",
+      "from": 101,
+      "to": 110
+    },
+    {
+      "title": "Sectors 111-115",
+      "from": 111,
+      "to": 115
+    }
+  ],
+  "corridors": [
+    {
+      "name": "New Gurgaon",
+      "slug": "projects-list"
+    },
+    {
+      "name": "SPR Road",
+      "slug": "projects-list"
+    },
+    {
+      "name": "NH-8 Corridor",
+      "slug": "projects-list"
+    }
+  ]
+}

@@ -9,10 +9,19 @@ SEO = json.load(open(os.path.join(ROOT, "seo.json"), encoding="utf-8"))
 _raw = json.load(open(os.path.join(ROOT, "allurls.json"), encoding="utf-8"))
 ALLURLS = [u["slug"].strip() for u in _raw.get("data", {}).get("allUrls", _raw if isinstance(_raw, list) else [])]
 
-PHONE = "9015883288"
-PHONE_FULL = "+919015883288"
-WA_NUMBER = "919015883288"
-LEAD_EMAIL = "sharma.manish53@gmail.com"
+# ---- CMS config: read managed settings/developers if present, else fall back ----
+CMS = {}
+_cms_path = os.path.join(ROOT, "cms_data.json")
+if os.path.exists(_cms_path):
+    try:
+        CMS = json.load(open(_cms_path, encoding="utf-8")) or {}
+    except Exception:
+        CMS = {}
+
+PHONE = CMS.get("settings", {}).get("phone", "9015883288")
+PHONE_FULL = CMS.get("settings", {}).get("phone_full", "+919****3288")
+WA_NUMBER = CMS.get("settings", {}).get("wa", "919015883288")
+LEAD_EMAIL = CMS.get("settings", {}).get("lead_email", "sharma.manish53@gmail.com")
 SITE = "https://www.dwarkaexpresswayprojects.in"  # original, for reference in footer
 
 def slug_file(s):
@@ -321,31 +330,41 @@ def build_mega():
     sec_b = sec_col(91,100)
     sec_c = sec_col(101,110)
     sec_d = sec_col(111,115)
-    # Developers from landing pages
-    dev_map = {
-        "dlf-properties.html":"DLF","vatika-properties.html":"Vatika","signature-global-gurgaon.html":"Signature Global",
-        "godrej-properties.html":"Godrej","tata-projects-on-dwarka-expressway.html":"Tata Housing","sobhadevelopers.html":"Sobha",
-        "ats-projects-in-gurgaon.html":"ATS","m3m-projects-gurgaon.html":"M3M","emaar-properties.html":"Emaar",
-        "adani.html":"Adani","bestech-projects-on-dwarka-expressway.html":"Bestech","experion-developers.html":"Experion",
-        "ansalhousing.html":"Ansal Housing","puriconstructions.html":"Puri","alphagcorp.html":"Alpha G Corp","ssgroup.html":"SS Group",
-        "microtekinfra.html":"Microtek","assotech.html":"Assotech","landmark.html":"Landmark","vatika-properties.html":"Vatika"
-    }
-    dev_items = list(dev_map.items())
-    def dev_li(s,n):
+    # Developers — prefer CMS-managed list, fall back to hardcoded
+    dev_items = []
+    if CMS.get("developers"):
+        grp_order = {"top": 0, "more": 1, "premium": 2, "others": 3}
+        for d in sorted(CMS["developers"], key=lambda x: grp_order.get(x.get("group", "others"), 9)):
+            slug = d.get("slug") or ""
+            if not slug.endswith(".html"):
+                slug = slug + ".html"
+            dev_items.append((slug, d.get("name", ""), d.get("logo")))
+    else:
+        dev_map = {
+            "dlf-properties.html":"DLF","vatika-properties.html":"Vatika","signature-global-gurgaon.html":"Signature Global",
+            "godrej-properties.html":"Godrej","tata-projects-on-dwarka-expressway.html":"Tata Housing","sobhadevelopers.html":"Sobha",
+            "ats-projects-in-gurgaon.html":"ATS","m3m-projects-gurgaon.html":"M3M","emaar-properties.html":"Emaar",
+            "adani.html":"Adani","bestech-projects-on-dwarka-expressway.html":"Bestech","experion-developers.html":"Experion",
+            "ansalhousing.html":"Ansal Housing","puriconstructions.html":"Puri","alphagcorp.html":"Alpha G Corp","ssgroup.html":"SS Group",
+            "microtekinfra.html":"Microtek","assotech.html":"Assotech","landmark.html":"Landmark","vatika-properties.html":"Vatika"
+        }
+        dev_items = [(s, n, None) for s, n in dev_map.items()]
+    def dev_li(s, n, logo=None):
         base=s[:s.rfind('.html')]
-        img=None
-        for ext in ('.png','.ico','.jpg'):
-            if os.path.exists(os.path.join(ROOT,'assets','devlogos',base+ext)):
-                img=base+ext; break
+        img=logo
+        if not img:
+            for ext in ('.png','.ico','.jpg'):
+                if os.path.exists(os.path.join(ROOT,'assets','devlogos',base+ext)):
+                    img=base+ext; break
         if img:
             return (f'<li><a href="{page_file(s)}"><img class="dev-logo" '
                     f'src="assets/devlogos/{img}" alt="{esc(n)} logo" loading="lazy"> '
                     f'<span>{esc(n)}</span></a></li>')
         return f'<li><a href="{page_file(s)}"><i class="fas fa-building"></i> {esc(n)}</a></li>'
-    dev_a = "".join(dev_li(s,n) for s,n in dev_items[:5])
-    dev_b = "".join(dev_li(s,n) for s,n in dev_items[5:10])
-    dev_c = "".join(dev_li(s,n) for s,n in dev_items[10:13])
-    dev_d = "".join(dev_li(s,n) for s,n in dev_items[13:])
+    dev_a = "".join(dev_li(s,n,l) for s,n,l in dev_items[:5])
+    dev_b = "".join(dev_li(s,n,l) for s,n,l in dev_items[5:10])
+    dev_c = "".join(dev_li(s,n,l) for s,n,l in dev_items[10:13])
+    dev_d = "".join(dev_li(s,n,l) for s,n,l in dev_items[13:])
     MEGA = (MEGA
         .replace("__FEATURED__", feat_html)
         .replace("__SEC_A__", sec_a).replace("__SEC_B__", sec_b)
